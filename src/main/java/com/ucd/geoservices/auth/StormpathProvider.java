@@ -3,8 +3,6 @@ package com.ucd.geoservices.auth;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
-import lombok.Getter;
-
 import org.springframework.stereotype.Component;
 
 import com.stormpath.sdk.account.Account;
@@ -17,6 +15,8 @@ import com.stormpath.sdk.cache.Caches;
 import com.stormpath.sdk.client.Client;
 import com.stormpath.sdk.client.Clients;
 import com.ucd.geoservices.app.Main;
+
+import lombok.Getter;
 
 @Getter
 @Component

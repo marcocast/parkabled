@@ -9,13 +9,13 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
+import com.google.common.collect.Maps;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.Wither;
-
-import com.google.common.collect.Maps;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "location")

@@ -7,10 +7,12 @@
 
 
 	<dependencies>
+
+
 		<dependency>
 			<groupId>com.aol.microservices</groupId>
-			<artifactId>micro-grizzly-with-jersey</artifactId>
-			<version>0.62</version>
+			<artifactId>microserver-core</artifactId>
+			<version>0.59</version>
 		</dependency>
 
 
