@@ -17,8 +17,6 @@ import com.ucd.geoservices.geo.GeocoderService;
 import com.ucd.geoservices.model.Coordinates;
 import com.ucd.geoservices.model.Location;
 
-
-
 @Component
 public class DubLinkedTransformer {
 
@@ -32,7 +30,7 @@ public class DubLinkedTransformer {
 		try {
 			parser = new CSVParser(in, CSVFormat.EXCEL);
 			parser.getRecords()
-					.stream()
+					.parallelStream()
 					.map(csvElement -> new Location(null, null,
 							"Ireland,Dublin " + csvElement.get(3) + " "
 									+ csvElement.get(0) + " "
@@ -48,8 +46,6 @@ public class DubLinkedTransformer {
 									result.add(location.withCoordinates(new Coordinates(
 											pair.getV1(), pair.getV2())));
 								});
-
-								result.stream().forEach(System.out::println);
 
 								Throttle();
 							});
@@ -78,5 +74,4 @@ public class DubLinkedTransformer {
 		}
 	}
 
-	
 }
