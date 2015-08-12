@@ -18,6 +18,7 @@ import com.ucd.geoservices.model.Coordinates;
 import com.ucd.geoservices.model.Location;
 
 
+
 @Component
 public class DubLinkedTransformer {
 

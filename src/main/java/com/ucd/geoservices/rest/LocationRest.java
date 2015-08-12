@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.aol.micro.server.auto.discovery.Rest;
-import com.aol.micro.server.rest.jackson.JacksonUtil;
+import com.aol.micro.server.rest.JacksonUtil;
 import com.ucd.geoservices.model.Location;
 import com.ucd.geoservices.model.PlainAddress;
 import com.ucd.geoservices.model.QueryAddressRadiusRequest;
