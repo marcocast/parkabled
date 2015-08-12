@@ -1,4 +1,4 @@
-package com.ucd.geoservices.app.email;
+package com.ucd.geoservices.email;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -16,14 +16,14 @@ public class SendGridProvider {
 	private final SendGrid sendgrid;
 
 	public SendGridProvider() {
-		String smtpAuthUser = Optional.ofNullable(
+		String sendgridUser = Optional.ofNullable(
 				System.getenv("SENDGRID_USERNAME")).orElse(
 				System.getProperty("SENDGRID_USERNAME"));
-		String smtpAuthPassword = Optional.ofNullable(
+		String sendgridPassword = Optional.ofNullable(
 				System.getenv("SENDGRID_PASSWORD")).orElse(
 				System.getProperty("SENDGRID_PASSWORD"));
 
-		this.sendgrid = new SendGrid(smtpAuthUser, smtpAuthPassword);
+		this.sendgrid = new SendGrid(sendgridUser, sendgridPassword);
 	}
 
 	public void send(String fromEmail, String toEmail, String subject,

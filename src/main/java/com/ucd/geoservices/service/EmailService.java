@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.ucd.geoservices.app.email.SendGridProvider;
+import com.ucd.geoservices.email.SendGridProvider;
 import com.ucd.geoservices.model.Location;
 import com.ucd.geoservices.model.User;
 
