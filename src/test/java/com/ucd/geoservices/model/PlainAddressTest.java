@@ -6,7 +6,7 @@ import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
-import com.aol.micro.server.rest.JacksonUtil;
+import com.aol.micro.server.rest.jackson.JacksonUtil;
 import com.ucd.geoservices.fixtures.PlainAddressFixture;
 
 public class PlainAddressTest {
@@ -19,7 +19,7 @@ public class PlainAddressTest {
 		assertThat(plainAddress.getCity(), is(nullValue()));
 		assertThat(plainAddress.getStreet(), is(nullValue()));
 		assertThat(plainAddress.getNumber(), is(nullValue()));
-		assertThat(plainAddress.getTotalLocationsHere(), is(nullValue()));
+		assertThat(plainAddress.getNumOfLocations(), is(nullValue()));
 
 	}
 

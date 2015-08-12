@@ -182,8 +182,6 @@
 	<classpathentry kind="var" path="M2_REPO/com/google/code/geocoder-java/geocoder-java/0.16/geocoder-java-0.16.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/google/code/gson/gson/2.2.4/gson-2.2.4.jar"/>
 	<classpathentry kind="var" path="M2_REPO/commons-httpclient/commons-httpclient/3.1/commons-httpclient-3.1.jar"/>
-	<classpathentry kind="var" path="M2_REPO/com/aol/cyclops/pattern-matching/4.0.1/pattern-matching-4.0.1.jar"/>
-	<classpathentry kind="var" path="M2_REPO/com/aol/cyclops/cyclops-base/4.0.1/cyclops-base-4.0.1.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/hamcrest/hamcrest-all/1.1/hamcrest-all-1.1.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/mockito/mockito-all/1.9.5/mockito-all-1.9.5.jar"/>
 	<classpathentry kind="var" path="M2_REPO/junit/junit/4.10/junit-4.10.jar"/>

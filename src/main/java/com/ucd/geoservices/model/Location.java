@@ -38,15 +38,15 @@ public class Location {
 	@Getter
 	private final String name;
 
-	@XmlElement(name = "totalLocationsHere")
+	@XmlElement(name = "numOfLocations")
 	@Getter
-	private final String totalLocationsHere;
+	private final String numOfLocations;
 
 	public Location() {
 		this.id = null;
 		this.coordinates = null;
 		this.name = null;
-		this.totalLocationsHere = null;
+		this.numOfLocations = null;
 	}
 
 	public Map<String, String> getMetaData() {
@@ -56,7 +56,7 @@ public class Location {
 				.map(element -> metaData.put(LocationMetaData.NAME.toString(), element));
 
 		metaData.put(LocationMetaData.TOTAL_LOCATIONS_HERE.toString(),
-				Optional.ofNullable(totalLocationsHere).orElseGet(() -> "1"));
+				Optional.ofNullable(numOfLocations).orElseGet(() -> "1"));
 
 		return metaData;
 	}

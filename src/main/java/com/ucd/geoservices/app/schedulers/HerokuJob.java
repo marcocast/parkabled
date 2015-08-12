@@ -19,7 +19,7 @@ public class HerokuJob implements ScheduledJob<HerokuJob> {
 				.path(Main.APPNAME + "/resources/application.wadl").request().get(String.class);
 
 		return SystemData.<String,String>builder().errors(0).processed(1)
-				.dataMap(HashMapBuilder.of("wadl", wadl).build()).build();
+				.dataMap(HashMapBuilder.of("wadl", wadl)).build();
 	}
 
 }

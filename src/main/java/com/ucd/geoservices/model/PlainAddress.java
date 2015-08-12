@@ -37,16 +37,16 @@ public class PlainAddress {
 	@Getter
 	private final String number;
 
-	@XmlElement(name = "totalLocationsHere")
+	@XmlElement(name = "numOfLocations")
 	@Getter
-	private final String totalLocationsHere;
+	private final String numOfLocations;
 
 	public PlainAddress() {
 		this.country = null;
 		this.city = null;
 		this.street = null;
 		this.number = null;
-		this.totalLocationsHere = null;
+		this.numOfLocations = null;
 	}
 
 	public String getFullAddressString() {

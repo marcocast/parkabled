@@ -20,7 +20,7 @@ public class LocationTransformer {
 
 	public Location plainAddressToLocation(PlainAddress plainAddress, Coordinates coordinates) {
 		return new Location(null, coordinates, plainAddress.getFullAddressString(),
-				plainAddress.getTotalLocationsHere());
+				plainAddress.getNumOfLocations());
 
 	}
 

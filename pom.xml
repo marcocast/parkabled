@@ -8,11 +8,34 @@
 
 	<dependencies>
 
+		<dependency>
+			<groupId>com.aol.microservices</groupId>
+			<artifactId>micro-grizzly-with-jersey</artifactId>
+			<version>0.62</version>
+		</dependency>
 
 		<dependency>
 			<groupId>com.aol.microservices</groupId>
-			<artifactId>microserver-core</artifactId>
-			<version>0.59</version>
+			<artifactId>micro-core</artifactId>
+			<version>0.62</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.aol.microservices</groupId>
+			<artifactId>micro-events</artifactId>
+			<version>0.62</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.aol.microservices</groupId>
+			<artifactId>micro-reactive</artifactId>
+			<version>0.62</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.aol.microservices</groupId>
+			<artifactId>micro-guava</artifactId>
+			<version>0.62</version>
 		</dependency>
 
 
@@ -75,11 +98,7 @@
 			<version>0.16</version>
 		</dependency>
 
-		<dependency>
-			<groupId>com.aol.cyclops</groupId>
-			<artifactId>pattern-matching</artifactId>
-			<version>4.0.1</version>
-		</dependency>
+		
 
 
 		<dependency>

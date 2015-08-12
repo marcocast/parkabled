@@ -6,7 +6,7 @@ import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
-import com.aol.micro.server.rest.JacksonUtil;
+import com.aol.micro.server.rest.jackson.JacksonUtil;
 import com.ucd.geoservices.fixtures.LocationFixture;
 
 public class LocationTest {
@@ -18,7 +18,7 @@ public class LocationTest {
 		assertThat(location.getName(), is(nullValue()));
 		assertThat(location.getCoordinates(), is(nullValue()));
 		assertThat(location.getId(), is(nullValue()));
-		assertThat(location.getTotalLocationsHere(), is(nullValue()));
+		assertThat(location.getNumOfLocations(), is(nullValue()));
 		assertThat(location.getMetaData().get(LocationMetaData.NAME.toString()), is(nullValue()));
 		assertThat(location.getMetaData().get(LocationMetaData.TOTAL_LOCATIONS_HERE.toString()), is("1"));
 	}
@@ -31,7 +31,7 @@ public class LocationTest {
 		assertThat(location.getCoordinates().getLongitude(), is(new Double(33)));
 		assertThat(location.getName(), is("name"));
 		assertThat(location.getId(), is("id"));
-		assertThat(location.getTotalLocationsHere(), is("1"));
+		assertThat(location.getNumOfLocations(), is("1"));
 
 	}
 
