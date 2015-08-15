@@ -10,6 +10,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.WebApplicationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -42,8 +43,12 @@ public class AuthorizationFilter implements Filter, FilterConfiguration {
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) res;
-		authManager.authenticateRequest(request);
-		chain.doFilter(request, response);
+		try {
+			authManager.authenticateRequest(request);
+			chain.doFilter(request, response);
+		} catch (WebApplicationException e) {
+			response.sendError(e.getResponse().getStatus(), e.getResponse().getEntity().toString());
+		}
 	}
 
 	@Override
