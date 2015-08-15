@@ -52,11 +52,9 @@ public class Location {
 	public Map<String, String> getMetaData() {
 
 		Map<String, String> metaData = Maps.newHashMap();
-		Optional.ofNullable(name).filter(element -> !element.isEmpty())
-				.map(element -> metaData.put(LocationMetaData.NAME.toString(), element));
+		Optional.ofNullable(name).filter(element -> !element.isEmpty()).map(element -> metaData.put(LocationMetaData.NAME.toString(), element));
 
-		metaData.put(LocationMetaData.TOTAL_LOCATIONS_HERE.toString(),
-				Optional.ofNullable(numOfLocations).orElseGet(() -> "1"));
+		metaData.put(LocationMetaData.TOTAL_LOCATIONS_HERE.toString(), Optional.ofNullable(numOfLocations).orElseGet(() -> "1"));
 
 		return metaData;
 	}

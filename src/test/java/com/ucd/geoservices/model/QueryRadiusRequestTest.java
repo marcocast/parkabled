@@ -32,8 +32,8 @@ public class QueryRadiusRequestTest {
 	public void testJson() {
 		QueryRadiusRequest expectedQueryRadiusRequest = new QueryRadiusRequest(new Coordinates(33, 66), 2);
 
-		QueryRadiusRequest actualQueryRadiusRequest = JacksonUtil
-				.convertFromJson(JacksonUtil.serializeToJson(expectedQueryRadiusRequest), QueryRadiusRequest.class);
+		QueryRadiusRequest actualQueryRadiusRequest = JacksonUtil.convertFromJson(JacksonUtil.serializeToJson(expectedQueryRadiusRequest),
+				QueryRadiusRequest.class);
 
 		assertThat(expectedQueryRadiusRequest, is(actualQueryRadiusRequest));
 

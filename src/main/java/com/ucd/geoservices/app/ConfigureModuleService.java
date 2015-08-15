@@ -13,8 +13,7 @@ public class ConfigureModuleService {
 	@Bean(name = "geoservicesdModule")
 	public ModuleBean configure() {
 		int port = new Integer(Optional.ofNullable(System.getProperty("service.port")).orElse("8080"));
-		return ModuleBean.builder().port(port).module(Main.GEOSERVICES_MODULE)
-				.host("https://" + Main.APPNAME + ".herokuapp.com:").build();
+		return ModuleBean.builder().port(port).module(Main.GEOSERVICES_MODULE).host("https://" + Main.APPNAME + ".herokuapp.com:").build();
 	}
 
 }

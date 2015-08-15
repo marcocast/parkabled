@@ -15,7 +15,7 @@ public class HerokuJobTest {
 		this.herokuJob = new HerokuJob();
 	}
 
-//	@Test
+	// @Test
 	public void testscheduleAndLog() {
 		assertThat(herokuJob.scheduleAndLog().getErrors(), is(0));
 		assertThat(herokuJob.scheduleAndLog().getProcessed(), is(1));

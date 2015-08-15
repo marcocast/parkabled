@@ -19,8 +19,8 @@ public class GeocoderService {
 		Optional<Pair<Double, Double>> longLat = Optional.empty();
 
 		final Geocoder geocoder = new Geocoder();
-		GeocoderRequest geocoderRequest = new GeocoderRequestBuilder().setAddress(fullAddress.replaceAll(" ", "+"))
-				.setLanguage("en").getGeocoderRequest();
+		GeocoderRequest geocoderRequest = new GeocoderRequestBuilder().setAddress(fullAddress.replaceAll(" ", "+")).setLanguage("en")
+				.getGeocoderRequest();
 		GeocodeResponse geocoderResponse;
 		try {
 			geocoderResponse = geocoder.geocode(geocoderRequest);

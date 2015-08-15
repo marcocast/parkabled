@@ -14,10 +14,9 @@ import com.ucd.geoservices.model.QueryRadiusRequest;
 
 @Component
 public class LocationService {
-	
+
 	@Autowired
 	private GeoManager geoManager;
-
 
 	public Location addLocation(Location location) {
 		return geoManager.addLocation(location);
@@ -43,5 +42,4 @@ public class LocationService {
 		return geoManager.queryWithBoundaries(queryRequest);
 	}
 
-	
 }

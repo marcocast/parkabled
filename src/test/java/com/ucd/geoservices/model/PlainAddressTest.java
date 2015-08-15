@@ -35,8 +35,7 @@ public class PlainAddressTest {
 	public void testJson() {
 		PlainAddress expectedPlainAddress = PlainAddressFixture.wexfordStreet33();
 
-		PlainAddress actualPlainAddress = JacksonUtil.convertFromJson(JacksonUtil.serializeToJson(expectedPlainAddress),
-				PlainAddress.class);
+		PlainAddress actualPlainAddress = JacksonUtil.convertFromJson(JacksonUtil.serializeToJson(expectedPlainAddress), PlainAddress.class);
 
 		assertThat(expectedPlainAddress, is(actualPlainAddress));
 

@@ -28,9 +28,8 @@ public class AuthorizationFilter implements Filter, FilterConfiguration {
 	@Override
 	public String[] getMapping() {
 		String appname = "/" + Main.APPNAME;
-		return new String[] { appname + "/resources/locations/add/*", appname + "/resources/locations/remove",
-				appname + "/resources/user/details", appname + "/resources/user/logout",
-				appname + "/resources/user/delete" };
+		return new String[] { appname + "/resources/locations/add/*", appname + "/resources/locations/remove", appname + "/resources/user/details",
+				appname + "/resources/user/logout", appname + "/resources/user/delete" };
 	}
 
 	@Override
@@ -40,8 +39,7 @@ public class AuthorizationFilter implements Filter, FilterConfiguration {
 	}
 
 	@Override
-	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
-			throws IOException, ServletException {
+	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) res;
 		authManager.authenticateRequest(request);

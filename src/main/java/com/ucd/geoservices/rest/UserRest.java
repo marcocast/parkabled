@@ -33,8 +33,7 @@ public class UserRest {
 	@Path("create")
 	@Consumes("application/json")
 	@Produces("application/json")
-	public Response createUser(@Context HttpHeaders header, @Context HttpServletResponse response,
-			final String userCreateRequest) {
+	public Response createUser(@Context HttpHeaders header, @Context HttpServletResponse response, final String userCreateRequest) {
 		User user = JacksonUtil.convertFromJson(userCreateRequest, User.class);
 		userService.create(user);
 		String refreshToken = userService.getRefreshToken(user.getEmail(), user.getPassword());

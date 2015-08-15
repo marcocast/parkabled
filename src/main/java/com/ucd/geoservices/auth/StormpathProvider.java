@@ -27,24 +27,21 @@ public class StormpathProvider {
 
 	public StormpathProvider() {
 
-		String stormpathAppId = Optional.ofNullable(System.getenv("stormpath-application-id"))
-				.orElse(System.getProperty("stormpath-application-id"));
-		String stormpathSecretId = Optional.ofNullable(System.getenv("stormpath-secret-id"))
-				.orElse(System.getProperty("stormpath-secret-id"));
+		String stormpathAppId = Optional.ofNullable(System.getenv("stormpath-application-id")).orElse(System.getProperty("stormpath-application-id"));
+		String stormpathSecretId = Optional.ofNullable(System.getenv("stormpath-secret-id")).orElse(System.getProperty("stormpath-secret-id"));
 
 		ApiKey apiKey = ApiKeys.builder().setId(stormpathAppId).setSecret(stormpathSecretId).build();
-		this.client = Clients.builder().setApiKey(apiKey)
-				.setCacheManager(Caches.newCacheManager().withDefaultTimeToLive(1, TimeUnit.DAYS)
-						.withDefaultTimeToIdle(2, TimeUnit.HOURS)
-						.withCache(Caches.forResource(Account.class)
+		this.client = Clients
+				.builder()
+				.setApiKey(apiKey)
+				.setCacheManager(
+						Caches.newCacheManager().withDefaultTimeToLive(1, TimeUnit.DAYS).withDefaultTimeToIdle(2, TimeUnit.HOURS)
+								.withCache(Caches.forResource(Account.class)
 								// Account-specific cache
 								// settings
-								.withTimeToLive(1, TimeUnit.HOURS).withTimeToIdle(30, TimeUnit.MINUTES))
-						.build())
-				.build();
+										.withTimeToLive(1, TimeUnit.HOURS).withTimeToIdle(30, TimeUnit.MINUTES)).build()).build();
 
-		ApplicationList applications = client.getCurrentTenant()
-				.getApplications(Applications.where(Applications.name().eqIgnoreCase(Main.APPNAME)));
+		ApplicationList applications = client.getCurrentTenant().getApplications(Applications.where(Applications.name().eqIgnoreCase(Main.APPNAME)));
 
 		this.application = applications.iterator().next();
 	}

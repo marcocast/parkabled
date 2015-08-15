@@ -16,18 +16,13 @@ public class SendGridProvider {
 	private final SendGrid sendgrid;
 
 	public SendGridProvider() {
-		String sendgridUser = Optional.ofNullable(
-				System.getenv("SENDGRID_USERNAME")).orElse(
-				System.getProperty("SENDGRID_USERNAME"));
-		String sendgridPassword = Optional.ofNullable(
-				System.getenv("SENDGRID_PASSWORD")).orElse(
-				System.getProperty("SENDGRID_PASSWORD"));
+		String sendgridUser = Optional.ofNullable(System.getenv("SENDGRID_USERNAME")).orElse(System.getProperty("SENDGRID_USERNAME"));
+		String sendgridPassword = Optional.ofNullable(System.getenv("SENDGRID_PASSWORD")).orElse(System.getProperty("SENDGRID_PASSWORD"));
 
 		this.sendgrid = new SendGrid(sendgridUser, sendgridPassword);
 	}
 
-	public void send(String fromEmail, String toEmail, String subject,
-			String htmlContent, BufferedImage img, String fileName) {
+	public void send(String fromEmail, String toEmail, String subject, String htmlContent, BufferedImage img, String fileName) {
 
 		SendGrid.Email email = new SendGrid.Email();
 		email.addTo(toEmail);

@@ -22,8 +22,7 @@ public class QueryAddressRadiusRequestTest {
 
 	@Test
 	public void testFullConstructor() {
-		QueryAddressRadiusRequest queryAddressRadiusRequest = new QueryAddressRadiusRequest(
-				PlainAddressFixture.wexfordStreet33(), 2);
+		QueryAddressRadiusRequest queryAddressRadiusRequest = new QueryAddressRadiusRequest(PlainAddressFixture.wexfordStreet33(), 2);
 
 		assertThat(queryAddressRadiusRequest.getPlainAddress(), is(PlainAddressFixture.wexfordStreet33()));
 		assertThat(queryAddressRadiusRequest.getRadius(), is(new Double(2)));
@@ -32,8 +31,7 @@ public class QueryAddressRadiusRequestTest {
 
 	@Test
 	public void testJson() {
-		QueryAddressRadiusRequest expectedQueryAddressRadiusRequest = new QueryAddressRadiusRequest(
-				PlainAddressFixture.wexfordStreet33(), 2);
+		QueryAddressRadiusRequest expectedQueryAddressRadiusRequest = new QueryAddressRadiusRequest(PlainAddressFixture.wexfordStreet33(), 2);
 
 		QueryAddressRadiusRequest actualQueryAddressRadiusRequest = JacksonUtil.convertFromJson(
 				JacksonUtil.serializeToJson(expectedQueryAddressRadiusRequest), QueryAddressRadiusRequest.class);

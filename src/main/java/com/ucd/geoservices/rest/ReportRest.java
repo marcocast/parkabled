@@ -25,7 +25,6 @@ import com.ucd.geoservices.model.User;
 import com.ucd.geoservices.service.EmailService;
 import com.ucd.geoservices.service.UserService;
 
-
 @Path("/report")
 @Component
 @Rest(isSingleton = true)
@@ -41,22 +40,17 @@ public class ReportRest {
 	@Path("send")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces("application/json")
-	public Response sendJpg(
-			@Context HttpServletRequest request,
-			@FormDataParam("location") String locationJson,
-			@FormDataParam("file") InputStream fileInputStream,
-			@FormDataParam("file") FormDataContentDisposition contentDispositionHeader)
+	public Response sendJpg(@Context HttpServletRequest request, @FormDataParam("location") String locationJson,
+			@FormDataParam("file") InputStream fileInputStream, @FormDataParam("file") FormDataContentDisposition contentDispositionHeader)
 			throws Exception {
 
 		User user = userService.getUser(request);
 
-		Location location = JacksonUtil.convertFromJson(locationJson,
-				Location.class);
+		Location location = JacksonUtil.convertFromJson(locationJson, Location.class);
 
 		BufferedImage img = ImageIO.read(fileInputStream);
 
-		emailService.sendEmailWithImage(user, location, img,
-				contentDispositionHeader.getFileName());
+		emailService.sendEmailWithImage(user, location, img, contentDispositionHeader.getFileName());
 
 		return Response.ok().build();
 	}

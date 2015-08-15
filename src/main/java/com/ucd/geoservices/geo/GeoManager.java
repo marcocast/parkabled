@@ -18,10 +18,8 @@ public interface GeoManager {
 
 	public Set<Location> queryWithRadius(QueryRadiusRequest queryRequest);
 
-	public Set<Location> queryWithAddressAndRadius(
-			QueryAddressRadiusRequest queryRequest);
+	public Set<Location> queryWithAddressAndRadius(QueryAddressRadiusRequest queryRequest);
 
-	public Set<Location> queryWithBoundaries(
-			QueryBoundariesRequest queryRequest);
+	public Set<Location> queryWithBoundaries(QueryBoundariesRequest queryRequest);
 
 }

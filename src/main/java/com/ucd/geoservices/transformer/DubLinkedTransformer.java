@@ -31,24 +31,17 @@ public class DubLinkedTransformer {
 			parser = new CSVParser(in, CSVFormat.EXCEL);
 			parser.getRecords()
 					.parallelStream()
-					.map(csvElement -> new Location(null, null,
-							"Ireland,Dublin " + csvElement.get(3) + " "
-									+ csvElement.get(0) + " "
-									+ csvElement.get(1), csvElement.get(2)))
-					.forEach(
-							location -> {
+					.map(csvElement -> new Location(null, null, "Ireland,Dublin " + csvElement.get(3) + " " + csvElement.get(0) + " "
+							+ csvElement.get(1), csvElement.get(2))).forEach(location -> {
 
-								Optional<Pair<Double, Double>> longLat = geocoderService
-										.getLongLat(location.getName()
-												.replaceAll(" ", "+"));
+						Optional<Pair<Double, Double>> longLat = geocoderService.getLongLat(location.getName().replaceAll(" ", "+"));
 
-								longLat.ifPresent(pair -> {
-									result.add(location.withCoordinates(new Coordinates(
-											pair.getV1(), pair.getV2())));
-								});
+						longLat.ifPresent(pair -> {
+							result.add(location.withCoordinates(new Coordinates(pair.getV1(), pair.getV2())));
+						});
 
-								Throttle();
-							});
+						Throttle();
+					});
 
 		} catch (Exception e) {
 			e.printStackTrace();

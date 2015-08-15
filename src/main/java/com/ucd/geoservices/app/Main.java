@@ -8,8 +8,7 @@ import com.aol.micro.server.config.Microserver;
 @Microserver(basePackages = { "com.ucd.geoservices" })
 public class Main {
 
-	public static final String APPNAME = Optional.ofNullable(System.getenv("appname"))
-			.orElse(System.getProperty("appname"));
+	public static final String APPNAME = Optional.ofNullable(System.getenv("appname")).orElse(System.getProperty("appname"));
 
 	public static final GeoservicesModule GEOSERVICES_MODULE = new GeoservicesModule(APPNAME + "/resources");
 

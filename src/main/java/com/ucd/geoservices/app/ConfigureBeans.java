@@ -26,8 +26,7 @@ public class ConfigureBeans {
 	public AuthManager authManager() {
 		return new StormpathAuth(userTransformer, stormpathProvider);
 	}
-	
-	
+
 	@Autowired
 	private LocationTransformer geoPointTransformer;
 

@@ -48,8 +48,7 @@ public class LocationTest {
 	public void testJson() {
 		Location expectedLocation = LocationFixture.standard();
 
-		Location actualLocation = JacksonUtil.convertFromJson(JacksonUtil.serializeToJson(expectedLocation),
-				Location.class);
+		Location actualLocation = JacksonUtil.convertFromJson(JacksonUtil.serializeToJson(expectedLocation), Location.class);
 
 		assertThat(expectedLocation, is(actualLocation));
 

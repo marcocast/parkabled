@@ -31,8 +31,7 @@ public class CoordinatesTest {
 	public void testJson() {
 		Coordinates expectedCoordinates = new Coordinates(33, 66);
 
-		Coordinates actualCoordinates = JacksonUtil.convertFromJson(JacksonUtil.serializeToJson(expectedCoordinates),
-				Coordinates.class);
+		Coordinates actualCoordinates = JacksonUtil.convertFromJson(JacksonUtil.serializeToJson(expectedCoordinates), Coordinates.class);
 
 		assertThat(expectedCoordinates, is(actualCoordinates));
 
