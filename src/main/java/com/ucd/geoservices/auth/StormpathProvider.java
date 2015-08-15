@@ -3,6 +3,8 @@ package com.ucd.geoservices.auth;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+import lombok.Getter;
+
 import org.springframework.stereotype.Component;
 
 import com.stormpath.sdk.account.Account;
@@ -15,8 +17,6 @@ import com.stormpath.sdk.cache.Caches;
 import com.stormpath.sdk.client.Client;
 import com.stormpath.sdk.client.Clients;
 import com.ucd.geoservices.app.Main;
-
-import lombok.Getter;
 
 @Getter
 @Component
@@ -35,11 +35,8 @@ public class StormpathProvider {
 				.builder()
 				.setApiKey(apiKey)
 				.setCacheManager(
-						Caches.newCacheManager().withDefaultTimeToLive(1, TimeUnit.DAYS).withDefaultTimeToIdle(2, TimeUnit.HOURS)
-								.withCache(Caches.forResource(Account.class)
-								// Account-specific cache
-								// settings
-										.withTimeToLive(1, TimeUnit.HOURS).withTimeToIdle(30, TimeUnit.MINUTES)).build()).build();
+						Caches.newCacheManager().withDefaultTimeToLive(AuthManager.REFRESH_TOKEN_EXPIRATION_DAYS, TimeUnit.DAYS)
+								.withDefaultTimeToIdle(2, TimeUnit.HOURS).withCache(Caches.forResource(Account.class)).build()).build();
 
 		ApplicationList applications = client.getCurrentTenant().getApplications(Applications.where(Applications.name().eqIgnoreCase(Main.APPNAME)));
 

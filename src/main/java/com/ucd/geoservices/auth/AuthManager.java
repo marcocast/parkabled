@@ -6,6 +6,8 @@ import com.ucd.geoservices.model.User;
 
 public interface AuthManager {
 
+	Integer REFRESH_TOKEN_EXPIRATION_DAYS = 60;
+
 	public abstract void deleteTokens(Object accountObject);
 
 	public abstract User getUser(Object accountObject);
