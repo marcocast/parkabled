@@ -20,7 +20,7 @@ public class EmailService {
 		content += "\r\n";
 		content += "I would like to report a violation on the following parking spot :";
 		content += "\r\n";
-		content += parkingLocation.getName();
+		content += "";
 		content += "\r\n";
 		content += "Coordinates : " + parkingLocation.getCoordinates().getLongitude() + " , " + parkingLocation.getCoordinates().getLatitude() + "";
 		content += "\r\n";

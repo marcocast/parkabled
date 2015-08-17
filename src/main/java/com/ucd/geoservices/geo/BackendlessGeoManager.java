@@ -45,12 +45,10 @@ public class BackendlessGeoManager implements GeoManager {
 
 	@Override
 	public Location addLocation(Location location) {
-		QueryRadiusRequest queryRequest = new QueryRadiusRequest(location.getCoordinates(), 5);
-		List<GeoPoint> existingNearbyPoints = getGeoPointsWithRadius(queryRequest.getCentralCoordinates().getLatitude(), queryRequest
-				.getCentralCoordinates().getLongitude(), queryRequest.getRadius());
-		if (existingNearbyPoints.isEmpty()) {
+
+		if (isAValidLocation(location)) {
 			GeoPoint savedGeoPoint = Backendless.Geo.savePoint(location.getCoordinates().getLatitude(), location.getCoordinates().getLongitude(),
-					location.getMetaData());
+					location.getMetadata());
 			return location.withId(savedGeoPoint.getObjectId());
 		} else {
 			throw new WebApplicationException(Response.status(Status.BAD_REQUEST)
@@ -167,6 +165,15 @@ public class BackendlessGeoManager implements GeoManager {
 					.type(MediaType.APPLICATION_JSON).build());
 		}
 		return geoPoints;
+	}
+
+	private boolean isAValidLocation(Location location) {
+		QueryRadiusRequest queryRequest = new QueryRadiusRequest(location.getCoordinates(), 5);
+
+		List<GeoPoint> existingNearbyPoints = getGeoPointsWithRadius(queryRequest.getCentralCoordinates().getLatitude(), queryRequest
+				.getCentralCoordinates().getLongitude(), queryRequest.getRadius());
+
+		return existingNearbyPoints.isEmpty();
 	}
 
 }

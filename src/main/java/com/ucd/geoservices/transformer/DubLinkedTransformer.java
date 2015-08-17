@@ -4,7 +4,10 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+
+import jersey.repackaged.com.google.common.collect.Maps;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -16,6 +19,7 @@ import com.google.common.collect.Lists;
 import com.ucd.geoservices.geo.GeocoderService;
 import com.ucd.geoservices.model.Coordinates;
 import com.ucd.geoservices.model.Location;
+import com.ucd.geoservices.model.LocationMetaData;
 
 @Component
 public class DubLinkedTransformer {
@@ -30,18 +34,27 @@ public class DubLinkedTransformer {
 		try {
 			parser = new CSVParser(in, CSVFormat.EXCEL);
 			parser.getRecords()
-					.parallelStream()
-					.map(csvElement -> new Location(null, null, "Ireland,Dublin " + csvElement.get(3) + " " + csvElement.get(0) + " "
-							+ csvElement.get(1), csvElement.get(2))).forEach(location -> {
+					.stream()
+					.map(csvElement -> {
+						Map<String, String> metadata = Maps.newHashMap();
+						metadata.put(LocationMetaData.NAME.toString(), "Ireland,Dublin " + csvElement.get(3) + " " + csvElement.get(0) + " "
+								+ csvElement.get(1));
+						metadata.put(LocationMetaData.NUM_OF_LOCATIONS.toString(), csvElement.get(2));
 
-						Optional<Pair<Double, Double>> longLat = geocoderService.getLongLat(location.getName().replaceAll(" ", "+"));
+						return new Location(null, null, metadata);
+					})
+					.forEach(
+							location -> {
 
-						longLat.ifPresent(pair -> {
-							result.add(location.withCoordinates(new Coordinates(pair.getV1(), pair.getV2())));
-						});
+								Optional<Pair<Double, Double>> longLat = geocoderService.getLongLat(location.getMetadata()
+										.get(LocationMetaData.NAME.toString()).replaceAll(" ", "+"));
 
-						Throttle();
-					});
+								longLat.ifPresent(pair -> {
+									result.add(location.withCoordinates(new Coordinates(pair.getV1(), pair.getV2())));
+								});
+
+								Throttle();
+							});
 
 		} catch (Exception e) {
 			e.printStackTrace();

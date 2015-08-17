@@ -15,12 +15,10 @@ public class LocationTest {
 	public void testEmptyConstructor() {
 		Location location = new Location();
 
-		assertThat(location.getName(), is(nullValue()));
+		assertThat(location.getMetadata().get(LocationMetaData.NAME.toString()), is(nullValue()));
 		assertThat(location.getCoordinates(), is(nullValue()));
 		assertThat(location.getId(), is(nullValue()));
-		assertThat(location.getNumOfLocations(), is(nullValue()));
-		assertThat(location.getMetaData().get(LocationMetaData.NAME.toString()), is(nullValue()));
-		assertThat(location.getMetaData().get(LocationMetaData.TOTAL_LOCATIONS_HERE.toString()), is("1"));
+		assertThat(location.getMetadata().get(LocationMetaData.NUM_OF_LOCATIONS.toString()), is(nullValue()));
 	}
 
 	@Test
@@ -29,18 +27,9 @@ public class LocationTest {
 
 		assertThat(location.getCoordinates().getLatitude(), is(new Double(66)));
 		assertThat(location.getCoordinates().getLongitude(), is(new Double(33)));
-		assertThat(location.getName(), is("name"));
+		assertThat(location.getMetadata().get(LocationMetaData.NAME.toString()), is("name"));
 		assertThat(location.getId(), is("id"));
-		assertThat(location.getNumOfLocations(), is("1"));
-
-	}
-
-	@Test
-	public void testMetadata() {
-		Location location = LocationFixture.standard2();
-
-		assertThat(location.getMetaData().get(LocationMetaData.NAME.toString()), is(location.getName()));
-		assertThat(location.getMetaData().get(LocationMetaData.TOTAL_LOCATIONS_HERE.toString()), is("2"));
+		assertThat(location.getMetadata().get(LocationMetaData.NUM_OF_LOCATIONS.toString()), is("1"));
 
 	}
 

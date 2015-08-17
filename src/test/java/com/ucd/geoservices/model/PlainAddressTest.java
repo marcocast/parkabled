@@ -19,7 +19,7 @@ public class PlainAddressTest {
 		assertThat(plainAddress.getCity(), is(nullValue()));
 		assertThat(plainAddress.getStreet(), is(nullValue()));
 		assertThat(plainAddress.getNumber(), is(nullValue()));
-		assertThat(plainAddress.getNumOfLocations(), is(nullValue()));
+		assertThat(plainAddress.getMetadata().get(LocationMetaData.NUM_OF_LOCATIONS.toString()), is(nullValue()));
 
 	}
 
