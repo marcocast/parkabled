@@ -22,4 +22,8 @@ public interface AuthManager {
 
 	public abstract void deleteUser(Object accountObject);
 
+	public abstract User sendPasswordResetEmail(String email);
+
+	public abstract User passwordReset(String resetToken, String newPassword);
+
 }

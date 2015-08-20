@@ -8,9 +8,9 @@ import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,7 @@ public class UserRest {
 	@Path("create")
 	@Consumes("application/json")
 	@Produces("application/json")
-	public Response createUser(@Context HttpHeaders header, @Context HttpServletResponse response, final String userCreateRequest) {
+	public Response createUser(@Context HttpServletResponse response, final String userCreateRequest) {
 		User user = JacksonUtil.convertFromJson(userCreateRequest, User.class);
 		userService.create(user);
 		String refreshToken = userService.getRefreshToken(user.getEmail(), user.getPassword());
@@ -48,6 +48,27 @@ public class UserRest {
 	@Produces("application/json")
 	public Response login(@HeaderParam("authorization") String auth, @Context HttpServletResponse response) {
 		String refreshToken = userService.getRefreshToken(auth);
+		response.setHeader("refresh_token", refreshToken);
+		response.setHeader("refresh_token_expires_in_days", AuthManager.REFRESH_TOKEN_EXPIRATION_DAYS.toString());
+		return accesstoken(refreshToken);
+	}
+
+	@GET
+	@Path("passwordreset/{email}")
+	@Produces("application/json")
+	public Response passwordResetEmail(@PathParam("email") String email) {
+		User user = userService.sendPasswordResetEmail(email);
+		return Response.ok(JacksonUtil.serializeToJson(user)).build();
+	}
+
+	@POST
+	@Path("newpassword/{resetToken}")
+	@Consumes("application/json")
+	@Produces("application/json")
+	public Response passwordReset(@Context HttpServletResponse response, @PathParam("resetToken") String resetToken, final String userCreateRequest) {
+		User user = JacksonUtil.convertFromJson(userCreateRequest, User.class);
+		userService.passwordReset(resetToken, user.getPassword());
+		String refreshToken = userService.getRefreshToken(user.getEmail(), user.getPassword());
 		response.setHeader("refresh_token", refreshToken);
 		response.setHeader("refresh_token_expires_in_days", AuthManager.REFRESH_TOKEN_EXPIRATION_DAYS.toString());
 		return accesstoken(refreshToken);

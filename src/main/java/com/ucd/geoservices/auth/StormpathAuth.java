@@ -90,6 +90,36 @@ public class StormpathAuth implements AuthManager {
 	}
 
 	@Override
+	public User sendPasswordResetEmail(String email) {
+		try {
+
+			Account account = stormpathProvider.getApplication().sendPasswordResetEmail(email);
+
+			return userTransformer.fromStormpathUser(account);
+
+		} catch (ResourceException e) {
+			throw new WebApplicationException(Response.status(e.getStatus()).entity(new ErrorMessage(e.getDeveloperMessage()))
+					.type(MediaType.APPLICATION_JSON).build());
+		}
+
+	}
+
+	@Override
+	public User passwordReset(String resetToken, String newPassword) {
+		try {
+
+			Account account = stormpathProvider.getApplication().resetPassword(resetToken, newPassword);
+
+			return userTransformer.fromStormpathUser(account);
+
+		} catch (ResourceException e) {
+			throw new WebApplicationException(Response.status(e.getStatus()).entity(new ErrorMessage(e.getDeveloperMessage()))
+					.type(MediaType.APPLICATION_JSON).build());
+		}
+
+	}
+
+	@Override
 	public String generateAccessToken(String apiKeyToken) {
 
 		String jsonResultToken = null;

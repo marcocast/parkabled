@@ -24,6 +24,14 @@ public class UserService {
 		return authManager.getRefreshToken(lap[0], lap[1]);
 	}
 
+	public User sendPasswordResetEmail(String email) {
+		return authManager.sendPasswordResetEmail(email);
+	}
+
+	public User passwordReset(String resetToken, String newPassword) {
+		return authManager.passwordReset(resetToken, newPassword);
+	}
+
 	public String getRefreshToken(String email, String password) {
 		return authManager.getRefreshToken(email, password);
 	}
