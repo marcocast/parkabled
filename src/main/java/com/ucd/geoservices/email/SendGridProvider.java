@@ -36,6 +36,8 @@ public class SendGridProvider {
 		try {
 			byteArrayOutputStream = Optional.of(new ByteArrayOutputStream());
 			ImageIO.write(img, getFileType(fileName), byteArrayOutputStream.get());
+			System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+fileName+"<<<<<<<<<<<<<<<<<<<<<<<<");
+			System.out.println(byteArrayOutputStream.get().toByteArray());
 			
 			email.addAttachment(fileName, new ByteArrayInputStream(byteArrayOutputStream.get().toByteArray()) );
 			sendgrid.send(email);
