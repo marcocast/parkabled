@@ -1,7 +1,10 @@
 package com.ucd.geoservices.email;
 
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.InputStream;
 import java.util.Optional;
 
 import javax.imageio.ImageIO;
@@ -29,15 +32,25 @@ public class SendGridProvider {
 		email.setFrom(fromEmail);
 		email.setSubject(subject);
 		email.setText(htmlContent);
-
+		Optional<ByteArrayOutputStream> byteArrayOutputStream = Optional.empty();
 		try {
-			File file = new File(fileName);
-			ImageIO.write(img, getFileType(fileName), file);
-			email.addAttachment(file.getName(), file);
+			byteArrayOutputStream = Optional.of(new ByteArrayOutputStream());
+			ImageIO.write(img, getFileType(fileName), byteArrayOutputStream.get());
+			
+			email.addAttachment(fileName, new ByteArrayInputStream(byteArrayOutputStream.get().toByteArray()) );
 			sendgrid.send(email);
-			file.delete();
+			
 		} catch (Exception e) {
 			throw new RuntimeException(e);
+		}finally {
+			byteArrayOutputStream.ifPresent(it -> {
+				try {
+					it.close();
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
+				
+			});
 		}
 
 	}
