@@ -16,18 +16,34 @@ public class EmailService {
 	private SendGridProvider emailProvider;
 
 	public void sendEmailWithImage(User user, Location parkingLocation, BufferedImage img, String fileName) {
-		String content = "Hi Officer,";
-		content += "\r\n";
-		content += "I would like to report a violation on the following parking spot :";
-		content += "\r\n";
+		String content = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">";
+		content += "<html>";
+		content += "<head>";
+		content += "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />";
+		content += "<title>Park-abled Report Email</title>";
+		content += "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"/>";
+		content += "</head>";
+		content += "<body style=\"margin: 0; padding: 0;\">";
+		content += "<h1>";
 		content += "";
-		content += "\r\n";
+		content += "</h1>";
+		content += "<p>";
+		content += "Hi Officer,";
+		content += "<BR>";
+		content += "I would like to report a violation on the following parking spot :";
+		content += "</p>";
+		content += "<p>";
 		content += "Coordinates : " + parkingLocation.getCoordinates().getLongitude() + " , " + parkingLocation.getCoordinates().getLatitude() + "";
-		content += "\r\n";
+		content += "</p>";
+		content += "<p>";
 		content += "Regards";
-		content += "\r\n";
+		content += "<BR>";
 		content += user.getUsername();
-		emailProvider.send(user.getEmail(), "marcocast@gmail.com", "Report Parking Violation", content, img, fileName);
+		content += "</p>";
+		content += "</body>";
+		content += "</html>";
+		
+		emailProvider.send(user.getEmail(), "parkabled@gmail.com", "Report Parking Violation", content, img, fileName);
 
 	}
 
