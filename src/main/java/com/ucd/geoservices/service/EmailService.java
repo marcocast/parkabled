@@ -1,12 +1,13 @@
 package com.ucd.geoservices.service;
 
-import java.awt.image.BufferedImage;
+import java.io.InputStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.ucd.geoservices.email.SendGridProvider;
 import com.ucd.geoservices.model.Location;
+import com.ucd.geoservices.model.LocationMetaData;
 import com.ucd.geoservices.model.User;
 
 @Component
@@ -15,7 +16,7 @@ public class EmailService {
 	@Autowired
 	private SendGridProvider emailProvider;
 
-	public void sendEmailWithImage(User user, Location parkingLocation, BufferedImage img, String fileName) {
+	public void sendEmailWithImage(User user, Location parkingLocation, InputStream inputStream, String fileName) {
 		String content = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">";
 		content += "<html>";
 		content += "<head>";
@@ -30,7 +31,10 @@ public class EmailService {
 		content += "<p>";
 		content += "Hi Officer,";
 		content += "<BR>";
-		content += "I would like to report a violation on the following parking spot :";
+		content += "I would like to report a violation on the following parking place reserved for disabled people :";
+		content += "</p>";
+		content += "<p>";
+		content += "Address : " + parkingLocation.getMetadata().get(LocationMetaData.NAME.toString());
 		content += "</p>";
 		content += "<p>";
 		content += "Coordinates : " + parkingLocation.getCoordinates().getLongitude() + " , " + parkingLocation.getCoordinates().getLatitude() + "";
@@ -43,7 +47,7 @@ public class EmailService {
 		content += "</body>";
 		content += "</html>";
 		
-		emailProvider.send(user.getEmail(), "parkabled@gmail.com", "Report Parking Violation", content, img, fileName);
+		emailProvider.send(user.getEmail(), "parkabled@gmail.com", "Report Parking Violation", content, inputStream, fileName);
 
 	}
 

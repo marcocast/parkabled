@@ -1,9 +1,7 @@
 package com.ucd.geoservices.rest;
 
-import java.awt.image.BufferedImage;
 import java.io.InputStream;
 
-import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -41,16 +39,14 @@ public class ReportRest {
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces("application/json")
 	public Response sendJpg(@Context HttpServletRequest request, @FormDataParam("location") String locationJson,
-			@FormDataParam("file") InputStream fileInputStream, @FormDataParam("file") FormDataContentDisposition contentDispositionHeader)
+			@FormDataParam("file") InputStream inputStream, @FormDataParam("file") FormDataContentDisposition contentDispositionHeader)
 			throws Exception {
 
 		User user = userService.getUser(request);
 
 		Location location = JacksonUtil.convertFromJson(locationJson, Location.class);
 
-		BufferedImage img = ImageIO.read(fileInputStream);
-
-		emailService.sendEmailWithImage(user, location, img, contentDispositionHeader.getFileName());
+		emailService.sendEmailWithImage(user, location, inputStream, contentDispositionHeader.getFileName());
 
 		return Response.ok().build();
 	}
