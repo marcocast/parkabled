@@ -1,13 +1,16 @@
 package com.ucd.geoservices.email;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Optional;
+
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.springframework.stereotype.Component;
 
 import com.sendgrid.SendGrid;
-import com.sendgrid.SendGridException;
+import com.ucd.geoservices.model.ErrorMessage;
 
 @Component
 public class SendGridProvider {
@@ -35,13 +38,10 @@ public class SendGridProvider {
 		try {
 			email.addAttachment(fileName, inputStream);
 			sendgrid.send(email);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SendGridException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} catch (Exception e) {
+			throw new WebApplicationException(Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).entity(new ErrorMessage(e.getMessage()))
+					.type(MediaType.APPLICATION_JSON).build());
+		} 
 		
 
 	}
