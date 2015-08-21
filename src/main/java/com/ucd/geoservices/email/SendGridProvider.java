@@ -31,7 +31,7 @@ public class SendGridProvider {
 		email.addTo(toEmail);
 		email.setFrom(fromEmail);
 		email.setSubject(subject);
-		email.setText(htmlContent);
+		email.setHtml(htmlContent);
 		Optional<ByteArrayOutputStream> byteArrayOutputStream = Optional.empty();
 		try {
 			byteArrayOutputStream = Optional.of(new ByteArrayOutputStream());
