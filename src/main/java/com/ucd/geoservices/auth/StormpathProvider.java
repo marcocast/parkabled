@@ -5,6 +5,8 @@ import java.util.concurrent.TimeUnit;
 
 import lombok.Getter;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.stormpath.sdk.account.Account;
@@ -18,14 +20,15 @@ import com.stormpath.sdk.client.Client;
 import com.stormpath.sdk.client.Clients;
 import com.ucd.geoservices.app.Main;
 
-@Getter
 @Component
+@Getter
 public class StormpathProvider {
 
 	private final Client client;
 	private final Application application;
 
-	public StormpathProvider() {
+	@Autowired
+	public StormpathProvider(@Value("${refreshTokenExpirationInDays}") Integer refreshTokenExpirationInDays) {
 
 		String stormpathAppId = Optional.ofNullable(System.getenv("stormpath-application-id")).orElse(System.getProperty("stormpath-application-id"));
 		String stormpathSecretId = Optional.ofNullable(System.getenv("stormpath-secret-id")).orElse(System.getProperty("stormpath-secret-id"));
@@ -35,7 +38,7 @@ public class StormpathProvider {
 				.builder()
 				.setApiKey(apiKey)
 				.setCacheManager(
-						Caches.newCacheManager().withDefaultTimeToLive(AuthManager.REFRESH_TOKEN_EXPIRATION_DAYS, TimeUnit.DAYS)
+						Caches.newCacheManager().withDefaultTimeToLive(refreshTokenExpirationInDays, TimeUnit.DAYS)
 								.withDefaultTimeToIdle(2, TimeUnit.HOURS).withCache(Caches.forResource(Account.class)).build()).build();
 
 		ApplicationList applications = client.getCurrentTenant().getApplications(Applications.where(Applications.name().eqIgnoreCase(Main.APPNAME)));

@@ -5,7 +5,7 @@ import java.util.Optional;
 import com.aol.micro.server.MicroserverApp;
 import com.aol.micro.server.config.Microserver;
 
-@Microserver(basePackages = { "com.ucd.geoservices" })
+@Microserver(basePackages = { "com.ucd.geoservices" }, propertiesName = "application.properties")
 public class Main {
 
 	public static final String APPNAME = Optional.ofNullable(System.getenv("appname")).orElse(System.getProperty("appname"));

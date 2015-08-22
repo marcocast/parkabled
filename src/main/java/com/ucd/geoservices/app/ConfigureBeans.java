@@ -1,6 +1,7 @@
 package com.ucd.geoservices.app;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -16,6 +17,9 @@ import com.ucd.geoservices.transformer.UserTransformer;
 @Configuration
 public class ConfigureBeans {
 
+	@Value("${acessTokenExpirationInMinutes}")
+	private Integer acessTokenExpirationInMinutes;
+
 	@Autowired
 	private UserTransformer userTransformer;
 
@@ -24,8 +28,11 @@ public class ConfigureBeans {
 
 	@Bean
 	public AuthManager authManager() {
-		return new StormpathAuth(userTransformer, stormpathProvider);
+		return new StormpathAuth(userTransformer, stormpathProvider, acessTokenExpirationInMinutes);
 	}
+
+	@Value("${maxRadiusBetweenPointsInMeters}")
+	private Integer maxRadiusBetweenPointsInMeters;
 
 	@Autowired
 	private LocationTransformer geoPointTransformer;
@@ -35,7 +42,7 @@ public class ConfigureBeans {
 
 	@Bean
 	public GeoManager geoManager() {
-		return new BackendlessGeoManager(geoPointTransformer, geocoderService);
+		return new BackendlessGeoManager(geoPointTransformer, geocoderService, maxRadiusBetweenPointsInMeters);
 	}
 
 }

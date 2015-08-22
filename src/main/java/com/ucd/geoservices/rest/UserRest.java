@@ -14,11 +14,11 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.aol.micro.server.auto.discovery.Rest;
 import com.aol.micro.server.rest.JacksonUtil;
-import com.ucd.geoservices.auth.AuthManager;
 import com.ucd.geoservices.model.User;
 import com.ucd.geoservices.service.UserService;
 
@@ -26,6 +26,9 @@ import com.ucd.geoservices.service.UserService;
 @Component
 @Rest(isSingleton = true)
 public class UserRest {
+
+	@Value("${acessTokenExpirationInMinutes}")
+	private Integer acessTokenExpirationInMinutes;
 
 	@Autowired
 	private UserService userService;
@@ -38,8 +41,7 @@ public class UserRest {
 		User user = JacksonUtil.convertFromJson(userCreateRequest, User.class);
 		userService.create(user);
 		String refreshToken = userService.getRefreshToken(user.getEmail(), user.getPassword());
-		response.setHeader("refresh_token", refreshToken);
-		response.setHeader("refresh_token_expires_in_days", AuthManager.REFRESH_TOKEN_EXPIRATION_DAYS.toString());
+		addRefreshToken(response, refreshToken);
 		return accesstoken(refreshToken);
 	}
 
@@ -48,8 +50,7 @@ public class UserRest {
 	@Produces("application/json")
 	public Response login(@HeaderParam("authorization") String auth, @Context HttpServletResponse response) {
 		String refreshToken = userService.getRefreshToken(auth);
-		response.setHeader("refresh_token", refreshToken);
-		response.setHeader("refresh_token_expires_in_days", AuthManager.REFRESH_TOKEN_EXPIRATION_DAYS.toString());
+		addRefreshToken(response, refreshToken);
 		return accesstoken(refreshToken);
 	}
 
@@ -69,8 +70,7 @@ public class UserRest {
 		User user = JacksonUtil.convertFromJson(userCreateRequest, User.class);
 		userService.passwordReset(resetToken, user.getPassword());
 		String refreshToken = userService.getRefreshToken(user.getEmail(), user.getPassword());
-		response.setHeader("refresh_token", refreshToken);
-		response.setHeader("refresh_token_expires_in_days", AuthManager.REFRESH_TOKEN_EXPIRATION_DAYS.toString());
+		addRefreshToken(response, refreshToken);
 		return accesstoken(refreshToken);
 	}
 
@@ -103,5 +103,10 @@ public class UserRest {
 	public Response deleteUser(@Context HttpServletRequest request) {
 		userService.deleteUser(request);
 		return Response.ok().build();
+	}
+
+	private void addRefreshToken(HttpServletResponse response, String refreshToken) {
+		response.setHeader("refresh_token", refreshToken);
+		response.setHeader("refresh_token_expires_in_days", acessTokenExpirationInMinutes.toString());
 	}
 }

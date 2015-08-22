@@ -33,10 +33,12 @@ public class StormpathAuth implements AuthManager {
 
 	private final UserTransformer userTransformer;
 	private final StormpathProvider stormpathProvider;
+	private final Integer acessTokenExpirationInMinutes;
 
-	public StormpathAuth(UserTransformer userTransformer, StormpathProvider stormpathProvider) {
+	public StormpathAuth(UserTransformer userTransformer, StormpathProvider stormpathProvider, Integer acessTokenExpirationInMinutes) {
 		this.userTransformer = userTransformer;
 		this.stormpathProvider = stormpathProvider;
+		this.acessTokenExpirationInMinutes = acessTokenExpirationInMinutes;
 
 	}
 
@@ -135,7 +137,7 @@ public class StormpathAuth implements AuthManager {
 			params.put("grant_type", param);
 			HttpRequest requestCustom = HttpRequests.method(HttpMethod.POST).headers(headers).parameters(params).build();
 			AccessTokenResult resultToken = (AccessTokenResult) stormpathProvider.getApplication().authenticateOauthRequest(requestCustom)
-					.withTtl(60 * 15).execute();
+					.withTtl(60 * acessTokenExpirationInMinutes).execute();
 			jsonResultToken = resultToken.getTokenResponse().toJson();
 		} catch (ResourceException e) {
 			throw new WebApplicationException(Response.status(e.getStatus()).entity(new ErrorMessage(e.getDeveloperMessage()))

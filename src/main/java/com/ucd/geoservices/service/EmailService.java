@@ -3,6 +3,7 @@ package com.ucd.geoservices.service;
 import java.io.InputStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.ucd.geoservices.email.SendGridProvider;
@@ -12,6 +13,12 @@ import com.ucd.geoservices.model.User;
 
 @Component
 public class EmailService {
+
+	@Value("${reportEmailTo}")
+	private String reportEmailTo;
+
+	@Value("${reportEmailSubject}")
+	private String reportEmailSubject;
 
 	@Autowired
 	private SendGridProvider emailProvider;
@@ -46,8 +53,8 @@ public class EmailService {
 		content += "</p>";
 		content += "</body>";
 		content += "</html>";
-		
-		emailProvider.send(user.getEmail(), "parkabled@gmail.com", "Report Parking Violation", content, inputStream, fileName);
+
+		emailProvider.send(user.getEmail(), reportEmailTo, reportEmailSubject, content, inputStream, fileName);
 
 	}
 

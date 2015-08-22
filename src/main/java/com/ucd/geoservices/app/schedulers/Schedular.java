@@ -14,7 +14,7 @@ public class Schedular {
 		this.herokuJob = herokuJob;
 	}
 
-	@Scheduled(cron = "1 1,31 8-18 * * *", zone = "GMT")
+	@Scheduled(cron = "${wakeupheroku}", zone = "${zone}")
 	public void schedule() {
 		herokuJob.scheduleAndLog();
 	}

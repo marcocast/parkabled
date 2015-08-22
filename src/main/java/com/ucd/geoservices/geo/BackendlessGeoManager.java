@@ -30,17 +30,18 @@ import com.ucd.geoservices.transformer.LocationTransformer;
 
 public class BackendlessGeoManager implements GeoManager {
 
+	private final Integer maxRadiusBetweenPointsInMeters;
 	private final LocationTransformer geoPointTransformer;
 	private final GeocoderService geocoderService;
 
-	public BackendlessGeoManager(LocationTransformer geoPointTransformer, GeocoderService geocoderService) {
+	public BackendlessGeoManager(LocationTransformer geoPointTransformer, GeocoderService geocoderService, Integer maxRadiusBetweenPointsInMeters) {
 		String backendlessAppId = Optional.ofNullable(System.getenv("backendless-application-id")).orElse(
 				System.getProperty("backendless-application-id"));
 		String backendlessSecretId = Optional.ofNullable(System.getenv("backendless-secret-id")).orElse(System.getProperty("backendless-secret-id"));
 		Backendless.initApp(backendlessAppId, backendlessSecretId, "v1");
 		this.geoPointTransformer = geoPointTransformer;
 		this.geocoderService = geocoderService;
-
+		this.maxRadiusBetweenPointsInMeters = maxRadiusBetweenPointsInMeters;
 	}
 
 	@Override
@@ -51,9 +52,10 @@ public class BackendlessGeoManager implements GeoManager {
 					location.getMetadata());
 			return location.withId(savedGeoPoint.getObjectId());
 		} else {
-			throw new WebApplicationException(Response.status(Status.BAD_REQUEST)
-					.entity(new ErrorMessage("A location within 5 meters from the specified coordinates already exists"))
-					.type(MediaType.APPLICATION_JSON).build());
+			throw new WebApplicationException(Response
+					.status(Status.BAD_REQUEST)
+					.entity(new ErrorMessage("A location within " + maxRadiusBetweenPointsInMeters
+							+ " meters from the specified coordinates already exists")).type(MediaType.APPLICATION_JSON).build());
 		}
 
 	}
@@ -168,7 +170,7 @@ public class BackendlessGeoManager implements GeoManager {
 	}
 
 	private boolean isAValidLocation(Location location) {
-		QueryRadiusRequest queryRequest = new QueryRadiusRequest(location.getCoordinates(), 5);
+		QueryRadiusRequest queryRequest = new QueryRadiusRequest(location.getCoordinates(), maxRadiusBetweenPointsInMeters);
 
 		List<GeoPoint> existingNearbyPoints = getGeoPointsWithRadius(queryRequest.getCentralCoordinates().getLatitude(), queryRequest
 				.getCentralCoordinates().getLongitude(), queryRequest.getRadius());
