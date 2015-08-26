@@ -1,6 +1,10 @@
 package com.ucd.geoservices.service;
 
+import java.util.Optional;
+
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response.Status;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,8 +24,9 @@ public class UserService {
 	}
 
 	public String getRefreshToken(String basicAuthEncoded) {
-		String[] lap = AuthDecoder.decodeBasic(basicAuthEncoded);
-		return authManager.getRefreshToken(lap[0], lap[1]);
+		Optional<String[]> lap = AuthDecoder.decodeBasic(basicAuthEncoded);
+		return lap.map(loginPassword -> authManager.getRefreshToken(loginPassword[0], loginPassword[1])).orElseThrow(
+				() -> new WebApplicationException("Invalid email or password.", Status.UNAUTHORIZED));
 	}
 
 	public User sendPasswordResetEmail(String email) {
