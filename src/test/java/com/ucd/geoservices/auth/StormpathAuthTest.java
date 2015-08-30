@@ -186,8 +186,6 @@ public class StormpathAuthTest {
 	public void testauthenticateRequestException() {
 		HttpServletRequest request = HttpServletRequestFixture.newHttpServletRequest();
 
-		Account account = AccountFitures.createEmptyAccount();
-
 		Mockito.when(application.authenticateApiRequest(request)).thenThrow(
 				ResourceExceptionFixture.newResourceException(2, "message", "developerMessage"));
 
@@ -226,5 +224,35 @@ public class StormpathAuthTest {
 
 		Mockito.verify(apiKey).delete();
 
+	}
+
+	@Test(expected = WebApplicationException.class)
+	public void testdeleteTokensException() {
+
+		Account account = Mockito.mock(Account.class);
+
+		Mockito.when(account.getApiKeys()).thenThrow(ResourceExceptionFixture.newResourceException(2, "message", "developerMessage"));
+
+		stormpathAuth.deleteTokens(account);
+
+	}
+
+	@Test
+	public void testdeleteUser() {
+
+		Account account = Mockito.mock(Account.class);
+
+		stormpathAuth.deleteUser(account);
+
+		Mockito.verify(account).delete();
+
+	}
+
+	@Test(expected = WebApplicationException.class)
+	public void testdeleteUserException() {
+		Account account = Mockito.mock(Account.class);
+		Mockito.doThrow(ResourceExceptionFixture.newResourceException(2, "message", "developerMessage")).when(account).delete();
+
+		stormpathAuth.deleteUser(account);
 	}
 }
