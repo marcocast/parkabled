@@ -21,9 +21,7 @@ public class AuthDecoderTest {
 
 	@Test
 	public void testdecodeBasicNull() {
-
 		Optional<String[]> emailPassword = AuthDecoder.decodeBasic(null);
-
 		assertThat(emailPassword.isPresent(), is(false));
 	}
 

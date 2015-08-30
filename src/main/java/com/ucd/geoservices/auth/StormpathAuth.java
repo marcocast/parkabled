@@ -164,9 +164,9 @@ public class StormpathAuth implements AuthManager {
 	public User getUser(Object accountObject) {
 		try {
 			return userTransformer.fromStormpathUser((Account) accountObject);
-		} catch (ResourceException e) {
-			throw new WebApplicationException(Response.status(e.getStatus()).entity(new ErrorMessage(e.getDeveloperMessage()))
-					.type(MediaType.APPLICATION_JSON).build());
+		} catch (Exception e) {
+			throw new WebApplicationException(Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode())
+					.entity(new ErrorMessage(e.getMessage())).type(MediaType.APPLICATION_JSON).build());
 		}
 	}
 
