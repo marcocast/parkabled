@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 
 import com.aol.micro.server.auto.discovery.Rest;
 import com.aol.micro.server.rest.JacksonUtil;
-import com.ucd.geoservices.model.Location;
+import com.ucd.geoservices.model.ReportRequest;
 import com.ucd.geoservices.model.User;
 import com.ucd.geoservices.service.EmailService;
 import com.ucd.geoservices.service.UserService;
@@ -38,15 +38,15 @@ public class ReportRest {
 	@Path("send")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces("application/json")
-	public Response sendJpg(@Context HttpServletRequest request, @FormDataParam("location") String locationJson,
+	public Response sendJpg(@Context HttpServletRequest request, @FormDataParam("reportRequest") String reportRequestJson,
 			@FormDataParam("file") InputStream inputStream, @FormDataParam("file") FormDataContentDisposition contentDispositionHeader)
 			throws Exception {
 
 		User user = userService.getUser(request);
 
-		Location location = JacksonUtil.convertFromJson(locationJson, Location.class);
+		ReportRequest reportRequest = JacksonUtil.convertFromJson(reportRequestJson, ReportRequest.class);
 
-		emailService.sendEmailWithImage(user, location, inputStream, contentDispositionHeader.getFileName());
+		emailService.sendEmailWithImage(user, reportRequest, inputStream, contentDispositionHeader.getFileName());
 
 		return Response.ok().build();
 	}

@@ -1,14 +1,15 @@
 package com.ucd.geoservices.service;
 
 import java.io.InputStream;
+import java.sql.Timestamp;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.ucd.geoservices.email.SendGridProvider;
-import com.ucd.geoservices.model.Location;
 import com.ucd.geoservices.model.LocationMetaData;
+import com.ucd.geoservices.model.ReportRequest;
 import com.ucd.geoservices.model.User;
 
 @Component
@@ -23,7 +24,7 @@ public class EmailService {
 	@Autowired
 	private SendGridProvider emailProvider;
 
-	public void sendEmailWithImage(User user, Location parkingLocation, InputStream inputStream, String fileName) {
+	public void sendEmailWithImage(User user, ReportRequest reportRequest, InputStream inputStream, String fileName) {
 		String content = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">";
 		content += "<html>";
 		content += "<head>";
@@ -41,10 +42,15 @@ public class EmailService {
 		content += "I would like to report a violation on the following parking place reserved for disabled people :";
 		content += "</p>";
 		content += "<p>";
-		content += "Address : " + parkingLocation.getMetadata().get(LocationMetaData.NAME.toString());
+		content += "Address : " + reportRequest.getLocation().getMetadata().get(LocationMetaData.NAME.toString());
 		content += "</p>";
 		content += "<p>";
-		content += "Coordinates : " + parkingLocation.getCoordinates().getLongitude() + " , " + parkingLocation.getCoordinates().getLatitude() + "";
+		content += "Coordinates : " + reportRequest.getLocation().getCoordinates().getLongitude() + " , " + reportRequest.getLocation().getCoordinates().getLatitude() + "";
+		content += "</p>";
+		content += "<p>";
+		content += "The violation happened at this date and time : " + new Timestamp(reportRequest.getTimestamp());
+		content += "<BR>";
+		content += user.getUsername();
 		content += "</p>";
 		content += "<p>";
 		content += "Regards";
