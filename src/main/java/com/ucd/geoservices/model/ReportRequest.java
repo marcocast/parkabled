@@ -26,10 +26,15 @@ public class ReportRequest {
 	@XmlElement(name = "timestamp")
 	@Getter
 	private final long timestamp;
+	
+	@XmlElement(name = "comments")
+	@Getter
+	private final String comments;
 
 	public ReportRequest() {
 		this.location = null;
 		this.timestamp = 0;
+		this.comments = "";
 	}
 	
 	
