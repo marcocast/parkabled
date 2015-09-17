@@ -1,6 +1,5 @@
 package com.ucd.geoservices.geo;
 
-import java.io.IOException;
 import java.util.Optional;
 
 import org.springframework.stereotype.Component;
@@ -9,6 +8,7 @@ import com.aol.cyclops.streams.Pair;
 import com.google.code.geocoder.Geocoder;
 import com.google.code.geocoder.GeocoderRequestBuilder;
 import com.google.code.geocoder.model.GeocodeResponse;
+import com.google.code.geocoder.model.GeocoderLocationType;
 import com.google.code.geocoder.model.GeocoderRequest;
 
 @Component
@@ -19,19 +19,28 @@ public class GeocoderService {
 		Optional<Pair<Double, Double>> longLat = Optional.empty();
 
 		final Geocoder geocoder = new Geocoder();
-		GeocoderRequest geocoderRequest = new GeocoderRequestBuilder().setAddress(fullAddress.replaceAll(" ", "+")).setLanguage("en")
-				.getGeocoderRequest();
+		GeocoderRequest geocoderRequest = new GeocoderRequestBuilder().setAddress(fullAddress.replaceAll(" ", "+"))
+				.setLanguage("en").getGeocoderRequest();
 		GeocodeResponse geocoderResponse;
 		try {
 			geocoderResponse = geocoder.geocode(geocoderRequest);
 
-			double longitude = geocoderResponse.getResults().get(0).getGeometry().getLocation().getLng().doubleValue();
+			if (geocoderResponse.getResults().get(0).getGeometry()
+					.getLocationType() != GeocoderLocationType.APPROXIMATE) {
 
-			double latitudine = geocoderResponse.getResults().get(0).getGeometry().getLocation().getLat().doubleValue();
+				double longitude = geocoderResponse.getResults().get(0).getGeometry().getLocation().getLng()
+						.doubleValue();
 
-			longLat = longLat.of(new Pair(longitude, latitudine));
-		} catch (IOException e) {
-			e.printStackTrace();
+				double latitudine = geocoderResponse.getResults().get(0).getGeometry().getLocation().getLat()
+						.doubleValue();
+
+				System.out.println(fullAddress + "   long : " + longitude + " - lat :" + latitudine);
+
+				longLat = longLat.of(new Pair(longitude, latitudine));
+
+			}
+		} catch (Exception e) {
+			longLat = Optional.empty();
 		}
 
 		return longLat;
