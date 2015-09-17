@@ -34,8 +34,6 @@ public class GeocoderService {
 				double latitudine = geocoderResponse.getResults().get(0).getGeometry().getLocation().getLat()
 						.doubleValue();
 
-				System.out.println(fullAddress + "   long : " + longitude + " - lat :" + latitudine);
-
 				longLat = longLat.of(new Pair(longitude, latitudine));
 
 			}
