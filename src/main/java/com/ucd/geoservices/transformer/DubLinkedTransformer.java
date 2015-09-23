@@ -11,6 +11,7 @@ import jersey.repackaged.com.google.common.collect.Maps;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -36,22 +37,12 @@ public class DubLinkedTransformer {
 			parser.getRecords()
 					.stream()
 					.map(csvElement -> {
-						Map<String, String> metadata = Maps.newHashMap();
-						metadata.put(LocationMetaData.NAME.toString(), "Ireland,Dublin " + csvElement.get(3) + " " + csvElement.get(0) + " "
-								+ csvElement.get(1));
-						metadata.put(LocationMetaData.NUM_OF_LOCATIONS.toString(), csvElement.get(2));
-
-						return new Location(null, null, metadata);
+						return createLocation(csvElement);
 					})
 					.forEach(
 							location -> {
 
-								Optional<Pair<Double, Double>> longLat = geocoderService.getLongLat(location.getMetadata()
-										.get(LocationMetaData.NAME.toString()).replaceAll(" ", "+"));
-
-								longLat.ifPresent(pair -> {
-									result.add(location.withCoordinates(new Coordinates(pair.getV1(), pair.getV2())));
-								});
+								addCoordinatesToResult(result, location);
 
 								Throttle();
 							});
@@ -70,6 +61,24 @@ public class DubLinkedTransformer {
 
 		return result;
 
+	}
+
+	private void addCoordinatesToResult(List<Location> result, Location location) {
+		Optional<Pair<Double, Double>> longLat = geocoderService.getLongLat(location.getMetadata()
+				.get(LocationMetaData.NAME.toString()).replaceAll(" ", "+"));
+
+		longLat.ifPresent(pair -> {
+			result.add(location.withCoordinates(new Coordinates(pair.getV1(), pair.getV2())));
+		});
+	}
+
+	private Location createLocation(CSVRecord csvElement) {
+		Map<String, String> metadata = Maps.newHashMap();
+		metadata.put(LocationMetaData.NAME.toString(), "Ireland,Dublin " + csvElement.get(3) + " " + csvElement.get(0) + " "
+				+ csvElement.get(1));
+		metadata.put(LocationMetaData.NUM_OF_LOCATIONS.toString(), csvElement.get(2));
+
+		return new Location(null, null, metadata);
 	}
 
 	private void Throttle() {
