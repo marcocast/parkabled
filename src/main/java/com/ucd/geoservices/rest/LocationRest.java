@@ -1,10 +1,12 @@
 package com.ucd.geoservices.rest;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +19,9 @@ import com.ucd.geoservices.model.PlainAddress;
 import com.ucd.geoservices.model.QueryAddressRadiusRequest;
 import com.ucd.geoservices.model.QueryBoundariesRequest;
 import com.ucd.geoservices.model.QueryRadiusRequest;
+import com.ucd.geoservices.model.User;
 import com.ucd.geoservices.service.LocationService;
+import com.ucd.geoservices.service.UserService;
 
 @Path("/locations")
 @Component
@@ -26,6 +30,9 @@ public class LocationRest {
 
 	@Autowired
 	private LocationService locationService;
+
+	@Autowired
+	private UserService userService;
 
 	@GET
 	@Produces("text/plain")
@@ -65,27 +72,30 @@ public class LocationRest {
 	@Path("add/coordinates")
 	@Consumes("application/json")
 	@Produces("application/json")
-	public Response add(final String locationJson) {
+	public Response add(@Context HttpServletRequest request, final String locationJson) {
+		User user = userService.getUser(request);
 		Location location = JacksonUtil.convertFromJson(locationJson, Location.class);
-		return Response.ok(JacksonUtil.serializeToJson(locationService.addLocation(location))).build();
+		return Response.ok(JacksonUtil.serializeToJson(locationService.addLocation(user, location))).build();
 	}
 
 	@POST
 	@Path("add/address")
 	@Consumes("application/json")
 	@Produces("application/json")
-	public Response addwithAddress(final String addressJson) {
+	public Response addwithAddress(@Context HttpServletRequest request, final String addressJson) {
+		User user = userService.getUser(request);
 		PlainAddress plainAddress = JacksonUtil.convertFromJson(addressJson, PlainAddress.class);
-		return Response.ok(JacksonUtil.serializeToJson(locationService.addLocation(plainAddress))).build();
+		return Response.ok(JacksonUtil.serializeToJson(locationService.addLocation(user, plainAddress))).build();
 	}
 
 	@POST
 	@Path("remove")
 	@Consumes("application/json")
 	@Produces("application/json")
-	public Response remove(final String locationJson) {
+	public Response remove(@Context HttpServletRequest request, final String locationJson) {
+		User user = userService.getUser(request);
 		Location location = JacksonUtil.convertFromJson(locationJson, Location.class);
-		return Response.ok(JacksonUtil.serializeToJson(locationService.removeLocation(location))).build();
+		return Response.ok(JacksonUtil.serializeToJson(locationService.removeLocation(user, location))).build();
 	}
 
 }

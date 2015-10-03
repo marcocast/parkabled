@@ -2,6 +2,6 @@ package com.ucd.geoservices.model;
 
 public enum LocationMetaData {
 
-	NAME, NUM_OF_LOCATIONS;
+	NAME, NUM_OF_LOCATIONS, REMOVAL_VOTES;
 
 }

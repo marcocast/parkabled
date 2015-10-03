@@ -3,6 +3,7 @@ package com.ucd.geoservices.rest;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -11,6 +12,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
 import javax.ws.rs.container.TimeoutHandler;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +25,9 @@ import com.ucd.geoservices.model.PlainAddress;
 import com.ucd.geoservices.model.QueryAddressRadiusRequest;
 import com.ucd.geoservices.model.QueryBoundariesRequest;
 import com.ucd.geoservices.model.QueryRadiusRequest;
+import com.ucd.geoservices.model.User;
 import com.ucd.geoservices.service.LocationService;
+import com.ucd.geoservices.service.UserService;
 
 @Path("/locations-asynch")
 @Component
@@ -32,6 +36,9 @@ public class LocationAsynchRest {
 
 	@Autowired
 	private LocationService locationService;
+
+	@Autowired
+	private UserService userService;
 
 	@GET
 	@Produces("text/plain")
@@ -45,7 +52,6 @@ public class LocationAsynchRest {
 	@Consumes("application/json")
 	@Produces("application/json")
 	public void queryWithRadius(@Suspended final AsyncResponse asyncResponse, final String queryRequestJson) {
-
 		Function<String, Response> locationResponseFunction = (queryRequestString) -> {
 			QueryRadiusRequest queryRequest = JacksonUtil.convertFromJson(queryRequestString, QueryRadiusRequest.class);
 			return Response.ok(JacksonUtil.serializeToJson(locationService.queryWithRadius(queryRequest))).build();
@@ -62,8 +68,7 @@ public class LocationAsynchRest {
 	public void queryWithBoundaries(@Suspended final AsyncResponse asyncResponse, final String queryRequestJson) {
 
 		Function<String, Response> locationResponseFunction = (queryRequestString) -> {
-			QueryBoundariesRequest queryRequest = JacksonUtil.convertFromJson(queryRequestString,
-					QueryBoundariesRequest.class);
+			QueryBoundariesRequest queryRequest = JacksonUtil.convertFromJson(queryRequestString, QueryBoundariesRequest.class);
 			return Response.ok(JacksonUtil.serializeToJson(locationService.queryWithBoundaries(queryRequest))).build();
 		};
 
@@ -78,10 +83,8 @@ public class LocationAsynchRest {
 	public void queryWithAddress(@Suspended final AsyncResponse asyncResponse, final String queryAddressRadiusRequest) {
 
 		Function<String, Response> locationResponseFunction = (queryRequestString) -> {
-			QueryAddressRadiusRequest queryRequest = JacksonUtil.convertFromJson(queryRequestString,
-					QueryAddressRadiusRequest.class);
-			return Response.ok(JacksonUtil.serializeToJson(locationService.queryWithAddressAndRadius(queryRequest)))
-					.build();
+			QueryAddressRadiusRequest queryRequest = JacksonUtil.convertFromJson(queryRequestString, QueryAddressRadiusRequest.class);
+			return Response.ok(JacksonUtil.serializeToJson(locationService.queryWithAddressAndRadius(queryRequest))).build();
 		};
 
 		runAsynch(asyncResponse, queryAddressRadiusRequest, locationResponseFunction);
@@ -92,59 +95,54 @@ public class LocationAsynchRest {
 	@Path("add/coordinates")
 	@Consumes("application/json")
 	@Produces("application/json")
-	public void add(@Suspended final AsyncResponse asyncResponse, final String locationJson) {
-
+	public void add(@Context HttpServletRequest request, @Suspended final AsyncResponse asyncResponse, final String locationJson) {
+		User user = userService.getUser(request);
 		Function<String, Response> locationResponseFunction = (queryRequestString) -> {
 			Location location = JacksonUtil.convertFromJson(queryRequestString, Location.class);
-			return Response.ok(JacksonUtil.serializeToJson(locationService.addLocation(location))).build();
+			return Response.ok(JacksonUtil.serializeToJson(locationService.addLocation(user, location))).build();
 		};
 
 		runAsynch(asyncResponse, locationJson, locationResponseFunction);
 
-		
 	}
 
 	@POST
 	@Path("add/address")
 	@Consumes("application/json")
 	@Produces("application/json")
-	public void addwithAddress(@Suspended final AsyncResponse asyncResponse, final String addressJson) {
-
+	public void addwithAddress(@Context HttpServletRequest request, @Suspended final AsyncResponse asyncResponse, final String addressJson) {
+		User user = userService.getUser(request);
 		Function<String, Response> locationResponseFunction = (queryRequestString) -> {
 			PlainAddress plainAddress = JacksonUtil.convertFromJson(queryRequestString, PlainAddress.class);
-			return Response.ok(JacksonUtil.serializeToJson(locationService.addLocation(plainAddress))).build();
+			return Response.ok(JacksonUtil.serializeToJson(locationService.addLocation(user, plainAddress))).build();
 		};
 
 		runAsynch(asyncResponse, addressJson, locationResponseFunction);
-		
+
 	}
 
 	@POST
 	@Path("remove")
 	@Consumes("application/json")
 	@Produces("application/json")
-	public void remove(@Suspended final AsyncResponse asyncResponse, final String locationJson) {
-
+	public void remove(@Context HttpServletRequest request, @Suspended final AsyncResponse asyncResponse, final String locationJson) {
+		User user = userService.getUser(request);
 		Function<String, Response> locationResponseFunction = (queryRequestString) -> {
 			Location location = JacksonUtil.convertFromJson(queryRequestString, Location.class);
-			return Response.ok(JacksonUtil.serializeToJson(locationService.removeLocation(location))).build();
+			return Response.ok(JacksonUtil.serializeToJson(locationService.removeLocation(user, location))).build();
 		};
 
 		runAsynch(asyncResponse, locationJson, locationResponseFunction);
-		
+
 	}
 
-	private void runAsynch(final AsyncResponse asyncResponse, final String queryRequestJson,
-			Function<String, Response> locationResponseFunction) {
-		
-		
-				
+	private void runAsynch(final AsyncResponse asyncResponse, final String queryRequestJson, Function<String, Response> locationResponseFunction) {
+
 		asyncResponse.setTimeoutHandler(new TimeoutHandler() {
 
 			@Override
 			public void handleTimeout(AsyncResponse asyncResponse) {
-				asyncResponse.resume(
-						Response.status(Response.Status.SERVICE_UNAVAILABLE).entity("Operation time out.").build());
+				asyncResponse.resume(Response.status(Response.Status.SERVICE_UNAVAILABLE).entity("Operation time out.").build());
 			}
 		});
 		asyncResponse.setTimeout(10, TimeUnit.SECONDS);

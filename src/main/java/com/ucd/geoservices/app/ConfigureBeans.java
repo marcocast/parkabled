@@ -8,9 +8,10 @@ import org.springframework.context.annotation.Configuration;
 import com.ucd.geoservices.auth.AuthManager;
 import com.ucd.geoservices.auth.StormpathAuth;
 import com.ucd.geoservices.auth.StormpathProvider;
+import com.ucd.geoservices.data.BackendlessDataManager;
+import com.ucd.geoservices.data.DataManager;
 import com.ucd.geoservices.geo.BackendlessGeoManager;
 import com.ucd.geoservices.geo.GeoManager;
-import com.ucd.geoservices.geo.GeocoderService;
 import com.ucd.geoservices.transformer.LocationTransformer;
 import com.ucd.geoservices.transformer.UserTransformer;
 
@@ -37,12 +38,14 @@ public class ConfigureBeans {
 	@Autowired
 	private LocationTransformer geoPointTransformer;
 
-	@Autowired
-	private GeocoderService geocoderService;
-
 	@Bean
 	public GeoManager geoManager() {
-		return new BackendlessGeoManager(geoPointTransformer, geocoderService, maxRadiusBetweenPointsInMeters);
+		return new BackendlessGeoManager(geoPointTransformer, maxRadiusBetweenPointsInMeters);
+	}
+
+	@Bean
+	public DataManager dataManager() {
+		return new BackendlessDataManager();
 	}
 
 }
