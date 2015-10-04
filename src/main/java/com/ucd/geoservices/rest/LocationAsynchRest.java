@@ -121,21 +121,6 @@ public class LocationAsynchRest {
 
 	}
 
-	@POST
-	@Path("remove")
-	@Consumes("application/json")
-	@Produces("application/json")
-	public void remove(@Context HttpServletRequest request, @Suspended final AsyncResponse asyncResponse, final String locationJson) {
-		User user = userService.getUser(request);
-		Function<String, Response> locationResponseFunction = (queryRequestString) -> {
-			Location location = JacksonUtil.convertFromJson(queryRequestString, Location.class);
-			return Response.ok(JacksonUtil.serializeToJson(locationService.removeLocation(user, location))).build();
-		};
-
-		runAsynch(asyncResponse, locationJson, locationResponseFunction);
-
-	}
-
 	private void runAsynch(final AsyncResponse asyncResponse, final String queryRequestJson, Function<String, Response> locationResponseFunction) {
 
 		asyncResponse.setTimeoutHandler(new TimeoutHandler() {

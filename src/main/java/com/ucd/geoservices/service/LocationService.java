@@ -2,19 +2,12 @@ package com.ucd.geoservices.service;
 
 import java.util.Set;
 
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.ucd.geoservices.geo.GeoManager;
 import com.ucd.geoservices.model.ACTION;
-import com.ucd.geoservices.model.ErrorMessage;
 import com.ucd.geoservices.model.Location;
-import com.ucd.geoservices.model.LocationMetaData;
 import com.ucd.geoservices.model.PlainAddress;
 import com.ucd.geoservices.model.QueryAddressRadiusRequest;
 import com.ucd.geoservices.model.QueryBoundariesRequest;
@@ -44,30 +37,12 @@ public class LocationService {
 		return addLocation(user, locationTransformer.plainAddressToLocation(plainAddress));
 	}
 
-	public Location removeLocation(User user, Location location) {
-		if (dataService.entryExists(location, user.getUsername(), ACTION.REMOVED)) {
-			throw new WebApplicationException(Response.status(Status.BAD_REQUEST)
-					.entity(new ErrorMessage("User " + user.getUsername() + " already removed this location")).type(MediaType.APPLICATION_JSON)
-					.build());
-		}
-
-		long totalRemovingVotes = dataService.totalRemovingVotes(location);
-
-		if (totalRemovingVotes >= 2) {
-			geoManager.removeLocation(location);
-			dataService.removeLocationActions(location);
-		} else {
-			increaseRemovingVotes(location, ++totalRemovingVotes);
-			geoManager.updateLocation(location);
-			dataService.addLocationAction(user, location, ACTION.REMOVED);
-		}
-
-		return location;
-
+	public Location removeLocation(Location location) {
+		return geoManager.removeLocation(location);
 	}
 
-	private void increaseRemovingVotes(Location location, long newCredibility) {
-		location.getMetadata().put(LocationMetaData.REMOVAL_VOTES.toString(), String.valueOf(newCredibility));
+	public Location updateLocation(Location location) {
+		return geoManager.updateLocation(location);
 	}
 
 	public Set<Location> queryWithRadius(QueryRadiusRequest queryRequest) {

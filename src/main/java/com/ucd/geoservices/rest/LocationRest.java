@@ -88,14 +88,4 @@ public class LocationRest {
 		return Response.ok(JacksonUtil.serializeToJson(locationService.addLocation(user, plainAddress))).build();
 	}
 
-	@POST
-	@Path("remove")
-	@Consumes("application/json")
-	@Produces("application/json")
-	public Response remove(@Context HttpServletRequest request, final String locationJson) {
-		User user = userService.getUser(request);
-		Location location = JacksonUtil.convertFromJson(locationJson, Location.class);
-		return Response.ok(JacksonUtil.serializeToJson(locationService.removeLocation(user, location))).build();
-	}
-
 }

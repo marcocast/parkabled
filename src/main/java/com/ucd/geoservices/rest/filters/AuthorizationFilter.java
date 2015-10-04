@@ -29,7 +29,8 @@ public class AuthorizationFilter implements Filter, FilterConfiguration {
 	@Override
 	public String[] getMapping() {
 		String appname = "/" + Main.APPNAME;
-		return new String[] { appname + "/resources/locations/add/*", appname + "/resources/locations/remove", appname + "/resources/user/details",
+		return new String[] { appname + "/resources/locations/add/*", appname + "/resources/locations/remove",
+				appname + "/resources/locations/vote/add", appname + "/resources/locations/vote/remove", appname + "/resources/user/details",
 				appname + "/resources/user/logout", appname + "/resources/user/delete", appname + "/resources/report/send" };
 	}
 

@@ -1,5 +1,7 @@
 package com.ucd.geoservices.transformer;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -7,6 +9,7 @@ import com.backendless.geo.GeoPoint;
 import com.ucd.geoservices.geo.GeocoderService;
 import com.ucd.geoservices.model.Coordinates;
 import com.ucd.geoservices.model.Location;
+import com.ucd.geoservices.model.LocationMetaData;
 import com.ucd.geoservices.model.PlainAddress;
 import com.ucd.geoservices.model.QueryAddressRadiusRequest;
 import com.ucd.geoservices.model.QueryRadiusRequest;
@@ -18,7 +21,9 @@ public class LocationTransformer {
 	private GeocoderService geocoderService;
 
 	public Location geoPointToLocation(GeoPoint geoPoint) {
-		return new Location(geoPoint.getObjectId(), new Coordinates(geoPoint.getLongitude(), geoPoint.getLatitude()), geoPoint.getMetadata());
+		Map<String, String> metadata = geoPoint.getMetadata();
+		metadata.putIfAbsent(LocationMetaData.REMOVAL_VOTES.toString(), "0");
+		return new Location(geoPoint.getObjectId(), new Coordinates(geoPoint.getLongitude(), geoPoint.getLatitude()), metadata);
 	}
 
 	public Location plainAddressToLocation(PlainAddress plainAddress, Coordinates coordinates) {
