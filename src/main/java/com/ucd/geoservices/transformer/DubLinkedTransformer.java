@@ -72,7 +72,6 @@ public class DubLinkedTransformer {
 		Map<String, String> metadata = Maps.newHashMap();
 		metadata.put(LocationMetaData.NAME.toString(), "Ireland,Dublin " + csvElement.get(3) + " " + csvElement.get(0) + " " + csvElement.get(1));
 		metadata.put(LocationMetaData.NUM_OF_LOCATIONS.toString(), csvElement.get(2));
-
 		return new Location(null, null, metadata);
 	}
 
