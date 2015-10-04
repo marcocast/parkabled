@@ -36,9 +36,7 @@ public class VoteLocationService {
 
 		long totalRemovingVotes = dataService.totalRemovingVotes(allLocationActions);
 
-		if (totalRemovingVotes < 1) {
-			updateRemovingVotes(location, --totalRemovingVotes);
-		}
+		updateRemovingVotes(location, --totalRemovingVotes);
 		location = locationService.updateLocation(location);
 		dataService.addLocationAction(user, location, ACTION.ADDED);
 		return location;
