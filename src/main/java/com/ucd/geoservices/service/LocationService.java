@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.ucd.geoservices.geo.GeoManager;
-import com.ucd.geoservices.model.ACTION;
 import com.ucd.geoservices.model.Location;
 import com.ucd.geoservices.model.PlainAddress;
 import com.ucd.geoservices.model.QueryAddressRadiusRequest;
@@ -22,14 +21,10 @@ public class LocationService {
 	private GeoManager geoManager;
 
 	@Autowired
-	private DataService dataService;
-
-	@Autowired
 	private LocationTransformer locationTransformer;
 
 	public Location addLocation(User user, Location location) {
 		Location savedLocation = geoManager.addLocation(location);
-		dataService.addLocationAction(user, savedLocation, ACTION.ADDED);
 		return savedLocation;
 	}
 
