@@ -48,7 +48,7 @@ public class BackendlessGeoManager implements GeoManager {
 			addCredibilty(location);
 			GeoPoint savedGeoPoint = Backendless.Geo.savePoint(location.getCoordinates().getLatitude(), location.getCoordinates().getLongitude(),
 					location.getMetadata());
-			return location.withId(savedGeoPoint.getObjectId());
+			return geoPointTransformer.geoPointToLocation(savedGeoPoint);
 		} else {
 			throw new WebApplicationException(Response
 					.status(Status.BAD_REQUEST)
@@ -64,10 +64,8 @@ public class BackendlessGeoManager implements GeoManager {
 			GeoPoint geoPoint = new GeoPoint();
 			geoPoint.setObjectId(location.getId());
 			geoPoint.setMetadata(location.getMetadata());
-			geoPoint.setLatitude(location.getCoordinates().getLatitude());
-			geoPoint.setLongitude(location.getCoordinates().getLongitude());
-			Backendless.Geo.savePoint(geoPoint);
-			return location;
+			geoPoint = Backendless.Geo.savePoint(geoPoint);
+			return geoPointTransformer.geoPointToLocation(geoPoint);
 		} catch (BackendlessException e) {
 			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(new ErrorMessage(e.getLocalizedMessage()))
 					.type(MediaType.APPLICATION_JSON).build());
@@ -80,11 +78,12 @@ public class BackendlessGeoManager implements GeoManager {
 			GeoPoint todelete = new GeoPoint();
 			todelete.setObjectId(location.getId());
 			Backendless.Geo.removePoint(todelete);
+			return geoPointTransformer.geoPointToLocation(todelete);
+
 		} catch (BackendlessException e) {
 			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(new ErrorMessage(e.getLocalizedMessage()))
 					.type(MediaType.APPLICATION_JSON).build());
 		}
-		return location;
 	}
 
 	@Override

@@ -23,6 +23,7 @@ public class LocationTransformer {
 	public Location geoPointToLocation(GeoPoint geoPoint) {
 		Map<String, String> metadata = geoPoint.getMetadata();
 		metadata.putIfAbsent(LocationMetaData.REMOVAL_VOTES.toString(), "0");
+		metadata.putIfAbsent(LocationMetaData.TOTAL_REMOVAL_VOTES_TO_DELETE.toString(), "3");
 		return new Location(geoPoint.getObjectId(), new Coordinates(geoPoint.getLongitude(), geoPoint.getLatitude()), metadata);
 	}
 
@@ -42,7 +43,6 @@ public class LocationTransformer {
 
 	public QueryRadiusRequest addressToLocationRadiusRequest(QueryAddressRadiusRequest queryRequest) {
 		return new QueryRadiusRequest(plainAddressToLocation(queryRequest.getPlainAddress()).getCoordinates(), queryRequest.getRadius());
-
 	}
 
 }

@@ -45,16 +45,12 @@ public class VoteLocationService {
 	public Location voteToRemoveLocation(User user, Location location) {
 		List<LocationAction> allLocationActions = dataService.getAllLocationActions(location);
 		checkUserAlreadyVoted(allLocationActions, user, ACTION.REMOVED);
+
 		long totalRemovingVotes = dataService.totalRemovingVotes(allLocationActions);
 
-		if (totalRemovingVotes >= 2) {
-			locationService.removeLocation(location);
-			dataService.removeLocationActions(allLocationActions);
-		} else {
-			updateRemovingVotes(location, ++totalRemovingVotes);
-			location = locationService.updateLocation(location);
-			dataService.addLocationAction(user, location, ACTION.REMOVED);
-		}
+		updateRemovingVotes(location, ++totalRemovingVotes);
+		location = locationService.updateLocation(location);
+		dataService.addLocationAction(user, location, ACTION.REMOVED);
 
 		return location;
 
