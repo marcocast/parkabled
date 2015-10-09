@@ -10,8 +10,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import jersey.repackaged.com.google.common.collect.Sets;
-
 import com.backendless.Backendless;
 import com.backendless.BackendlessCollection;
 import com.backendless.exceptions.BackendlessException;
@@ -26,6 +24,8 @@ import com.ucd.geoservices.model.QueryBoundariesRequest;
 import com.ucd.geoservices.model.QueryRadiusRequest;
 import com.ucd.geoservices.transformer.LocationTransformer;
 
+import jersey.repackaged.com.google.common.collect.Sets;
+
 public class BackendlessGeoManager implements GeoManager {
 
 	private static final String INITIAL_REMOVAL_VOTES = "0";
@@ -33,9 +33,10 @@ public class BackendlessGeoManager implements GeoManager {
 	private final LocationTransformer geoPointTransformer;
 
 	public BackendlessGeoManager(LocationTransformer geoPointTransformer, Integer maxRadiusBetweenPointsInMeters) {
-		String backendlessAppId = Optional.ofNullable(System.getenv("backendless-application-id")).orElse(
-				System.getProperty("backendless-application-id"));
-		String backendlessSecretId = Optional.ofNullable(System.getenv("backendless-secret-id")).orElse(System.getProperty("backendless-secret-id"));
+		String backendlessAppId = Optional.ofNullable(System.getenv("backendless-application-id"))
+				.orElse(System.getProperty("backendless-application-id"));
+		String backendlessSecretId = Optional.ofNullable(System.getenv("backendless-secret-id"))
+				.orElse(System.getProperty("backendless-secret-id"));
 		Backendless.initApp(backendlessAppId, backendlessSecretId, "v1");
 		this.geoPointTransformer = geoPointTransformer;
 		this.maxRadiusBetweenPointsInMeters = maxRadiusBetweenPointsInMeters;
@@ -46,14 +47,14 @@ public class BackendlessGeoManager implements GeoManager {
 
 		if (isAValidLocation(location)) {
 			addCredibilty(location);
-			GeoPoint savedGeoPoint = Backendless.Geo.savePoint(location.getCoordinates().getLatitude(), location.getCoordinates().getLongitude(),
-					location.getMetadata());
+			GeoPoint savedGeoPoint = Backendless.Geo.savePoint(location.getCoordinates().getLatitude(),
+					location.getCoordinates().getLongitude(), location.getMetadata());
 			return geoPointTransformer.geoPointToLocation(savedGeoPoint);
 		} else {
-			throw new WebApplicationException(Response
-					.status(Status.BAD_REQUEST)
+			throw new WebApplicationException(Response.status(Status.BAD_REQUEST)
 					.entity(new ErrorMessage("A location within " + maxRadiusBetweenPointsInMeters
-							+ " meters from the specified coordinates already exists")).type(MediaType.APPLICATION_JSON).build());
+							+ " meters from the specified coordinates already exists"))
+					.type(MediaType.APPLICATION_JSON).build());
 		}
 
 	}
@@ -64,11 +65,13 @@ public class BackendlessGeoManager implements GeoManager {
 			GeoPoint geoPoint = new GeoPoint();
 			geoPoint.setObjectId(location.getId());
 			geoPoint.setMetadata(location.getMetadata());
+			geoPoint.setLatitude(location.getCoordinates().getLatitude());
+			geoPoint.setLongitude(location.getCoordinates().getLongitude());
 			geoPoint = Backendless.Geo.savePoint(geoPoint);
 			return geoPointTransformer.geoPointToLocation(geoPoint);
 		} catch (BackendlessException e) {
-			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(new ErrorMessage(e.getLocalizedMessage()))
-					.type(MediaType.APPLICATION_JSON).build());
+			throw new WebApplicationException(Response.status(Status.BAD_REQUEST)
+					.entity(new ErrorMessage(e.getLocalizedMessage())).type(MediaType.APPLICATION_JSON).build());
 		}
 	}
 
@@ -81,8 +84,8 @@ public class BackendlessGeoManager implements GeoManager {
 			return geoPointTransformer.geoPointToLocation(todelete);
 
 		} catch (BackendlessException e) {
-			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(new ErrorMessage(e.getLocalizedMessage()))
-					.type(MediaType.APPLICATION_JSON).build());
+			throw new WebApplicationException(Response.status(Status.BAD_REQUEST)
+					.entity(new ErrorMessage(e.getLocalizedMessage())).type(MediaType.APPLICATION_JSON).build());
 		}
 	}
 
@@ -90,11 +93,13 @@ public class BackendlessGeoManager implements GeoManager {
 	public Set<Location> queryWithRadius(QueryRadiusRequest queryRequest) {
 		Set<Location> results = Sets.newHashSet();
 		try {
-			results = getGeoPointsWithRadius(queryRequest.getCentralCoordinates().getLongitude(), queryRequest.getCentralCoordinates().getLatitude(),
-					queryRequest.getRadius()).stream().map(geoPoint -> geoPointTransformer.geoPointToLocation(geoPoint)).collect(Collectors.toSet());
+			results = getGeoPointsWithRadius(queryRequest.getCentralCoordinates().getLongitude(),
+					queryRequest.getCentralCoordinates().getLatitude(), queryRequest.getRadius()).stream()
+							.map(geoPoint -> geoPointTransformer.geoPointToLocation(geoPoint))
+							.collect(Collectors.toSet());
 		} catch (BackendlessException e) {
-			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(new ErrorMessage(e.getLocalizedMessage()))
-					.type(MediaType.APPLICATION_JSON).build());
+			throw new WebApplicationException(Response.status(Status.BAD_REQUEST)
+					.entity(new ErrorMessage(e.getLocalizedMessage())).type(MediaType.APPLICATION_JSON).build());
 		}
 		return results;
 	}
@@ -106,9 +111,10 @@ public class BackendlessGeoManager implements GeoManager {
 		try {
 			BackendlessGeoQuery geoQuery = new BackendlessGeoQuery();
 
-			GeoPoint topLeft = new GeoPoint(queryRequest.getTopLeftCoordinates().getLatitude(), queryRequest.getTopLeftCoordinates().getLongitude());
-			GeoPoint bottomright = new GeoPoint(queryRequest.getBottomRightCoordinates().getLatitude(), queryRequest.getBottomRightCoordinates()
-					.getLongitude());
+			GeoPoint topLeft = new GeoPoint(queryRequest.getTopLeftCoordinates().getLatitude(),
+					queryRequest.getTopLeftCoordinates().getLongitude());
+			GeoPoint bottomright = new GeoPoint(queryRequest.getBottomRightCoordinates().getLatitude(),
+					queryRequest.getBottomRightCoordinates().getLongitude());
 			geoQuery.setSearchRectangle(topLeft, bottomright);
 			BackendlessCollection<GeoPoint> points = Backendless.Geo.getPoints(geoQuery);
 
@@ -118,10 +124,11 @@ public class BackendlessGeoManager implements GeoManager {
 				points = points.nextPage();
 			}
 
-			results = geoPoints.stream().map(geoPoint -> geoPointTransformer.geoPointToLocation(geoPoint)).collect(Collectors.toSet());
+			results = geoPoints.stream().map(geoPoint -> geoPointTransformer.geoPointToLocation(geoPoint))
+					.collect(Collectors.toSet());
 		} catch (BackendlessException e) {
-			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(new ErrorMessage(e.getLocalizedMessage()))
-					.type(MediaType.APPLICATION_JSON).build());
+			throw new WebApplicationException(Response.status(Status.BAD_REQUEST)
+					.entity(new ErrorMessage(e.getLocalizedMessage())).type(MediaType.APPLICATION_JSON).build());
 		}
 		return results;
 	}
@@ -143,14 +150,15 @@ public class BackendlessGeoManager implements GeoManager {
 			}
 
 		} catch (BackendlessException e) {
-			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(new ErrorMessage(e.getLocalizedMessage()))
-					.type(MediaType.APPLICATION_JSON).build());
+			throw new WebApplicationException(Response.status(Status.BAD_REQUEST)
+					.entity(new ErrorMessage(e.getLocalizedMessage())).type(MediaType.APPLICATION_JSON).build());
 		}
 		return geoPoints;
 	}
 
 	private boolean isAValidLocation(Location location) {
-		QueryRadiusRequest queryRequest = new QueryRadiusRequest(location.getCoordinates(), maxRadiusBetweenPointsInMeters);
+		QueryRadiusRequest queryRequest = new QueryRadiusRequest(location.getCoordinates(),
+				maxRadiusBetweenPointsInMeters);
 		Set<Location> existingNearbyPoints = queryWithRadius(queryRequest);
 		return existingNearbyPoints.isEmpty();
 	}
