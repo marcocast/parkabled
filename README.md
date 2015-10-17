@@ -37,17 +37,17 @@ Push to heroku.
  
  -Dauth.provider=stormpath
  
- -Dbackendless-application-id=F7D421A4-8FA0-AD33-FFA3-97D476001300
+ -Dbackendless-application-id={BACKENDLESS APP ID}
  
- -Dbackendless-secret-id=571B9BE1-FF2E-0B41-FF4A-F232B0FADB00
+ -Dbackendless-secret-id={BACKENDLESS ANDROID SECRET ID}}
  
- -Dstormpath-application-id=2WOVYCQWFLTRUG8AX4DJXHBC3
+ -Dstormpath-application-id={STORMPATH APP ID}
  
- -Dstormpath-secret-id=JKNKllXsovG2ElgcqO99l55VeiYdlG08yCzSom7cD40
+ -Dstormpath-secret-id={STORMPATH SECRET ID}
  
- -DSENDGRID_PASSWORD=vcpcgyco7416
+ -DSENDGRID_PASSWORD={SENDGRID PASSWORD}
  
- -DSENDGRID_USERNAME=app39948759@heroku.com
+ -DSENDGRID_USERNAME={SENDGRID USERNAME}
  
 
 
