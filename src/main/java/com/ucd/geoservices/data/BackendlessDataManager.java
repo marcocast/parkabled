@@ -1,7 +1,6 @@
 package com.ucd.geoservices.data;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.backendless.Backendless;
 import com.backendless.BackendlessCollection;
@@ -12,14 +11,6 @@ import com.ucd.geoservices.model.LocationAction;
 import com.ucd.geoservices.model.User;
 
 public class BackendlessDataManager implements DataManager {
-
-	public BackendlessDataManager() {
-		String backendlessAppId = Optional.ofNullable(System.getenv("backendless-application-id")).orElse(
-				System.getProperty("backendless-application-id"));
-		String backendlessSecretId = Optional.ofNullable(System.getenv("backendless-secret-id")).orElse(System.getProperty("backendless-secret-id"));
-		Backendless.initApp(backendlessAppId, backendlessSecretId, "v1");
-
-	}
 
 	@Override
 	public LocationAction addLocationAction(User user, Location savedLocation, ACTION action) {
