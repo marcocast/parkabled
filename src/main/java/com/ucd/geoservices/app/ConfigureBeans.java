@@ -36,6 +36,9 @@ public class ConfigureBeans {
 	private Integer maxRadiusBetweenPointsInMeters;
 
 	@Autowired
+	private BackendlessInitializer backendlessInitializer;
+
+	@Autowired
 	private LocationTransformer geoPointTransformer;
 
 	@Bean
