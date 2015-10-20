@@ -38,7 +38,7 @@ public class DataLoaderRest {
 	@Path("dublinked")
 	@Consumes("text/plain")
 	@Produces("application/json")
-	public Response anotherTest(@Context HttpServletRequest request, final String csvData) {
+	public Response load(@Context HttpServletRequest request, final String csvData) {
 		User user = userService.getUser(request);
 		List<Location> parkings = dubLinkedTransformer.transformFromCSVData(csvData);
 
