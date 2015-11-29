@@ -42,8 +42,7 @@ public class DataLoaderRestTest {
 	@Before
 	public void init() {
 		MockitoAnnotations.initMocks(this);
-		when(userService.getUser(any(HttpServletRequest.class)))
-				.thenReturn(new User("email", "password", "username", "status"));
+		when(userService.getUser(any(HttpServletRequest.class))).thenReturn(new User("email", "password", "username", "status"));
 	}
 
 	@Test
@@ -52,7 +51,7 @@ public class DataLoaderRestTest {
 		String csvData = "Alborough Parade,D1,1,No 4/6,9910";
 
 		List<Location> locations = Lists.newArrayList(LocationFixture.standard());
-		when(dubLinkedTransformer.transformFromCSVData(csvData)).thenReturn(locations);
+		when(dubLinkedTransformer.transformFromCSVData("Ireland", "Dublin", csvData)).thenReturn(locations);
 
 		Response response = dataLoaderRest.load(request, csvData);
 
