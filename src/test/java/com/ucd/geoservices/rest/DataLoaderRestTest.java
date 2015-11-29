@@ -53,7 +53,7 @@ public class DataLoaderRestTest {
 		List<Location> locations = Lists.newArrayList(LocationFixture.standard());
 		when(dubLinkedTransformer.transformFromCSVData("Ireland", "Dublin", csvData)).thenReturn(locations);
 
-		Response response = dataLoaderRest.load(request, csvData);
+		Response response = dataLoaderRest.loadCSV(request, "Ireland", "Dublin", csvData);
 
 		assertThat(response.getEntity().toString(), is("Data Loaded : 1"));
 

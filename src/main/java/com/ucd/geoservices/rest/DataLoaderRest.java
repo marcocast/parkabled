@@ -36,18 +36,6 @@ public class DataLoaderRest {
 	private DubLinkedTransformer dubLinkedTransformer;
 
 	@POST
-	@Path("dublinked")
-	@Consumes("text/plain")
-	@Produces("application/json")
-	public Response load(@Context HttpServletRequest request, final String csvData) {
-		User user = userService.getUser(request);
-		List<Location> parkings = dubLinkedTransformer.transformFromCSVData("Ireland", "Dublin", csvData);
-
-		parkings.forEach(location -> locationService.addLocation(user, location));
-		return Response.ok("Data Loaded : " + parkings.size()).build();
-	}
-
-	@POST
 	@Path("csv/{country}/{city}")
 	@Consumes("text/plain")
 	@Produces("application/json")
