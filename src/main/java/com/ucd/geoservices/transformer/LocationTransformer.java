@@ -3,6 +3,7 @@ package com.ucd.geoservices.transformer;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.backendless.geo.GeoPoint;
@@ -20,10 +21,13 @@ public class LocationTransformer {
 	@Autowired
 	private GeocoderService geocoderService;
 
+	@Value("${totalRemovalVotesToDelete}")
+	private String totalRemovalVotesToDelete;
+
 	public Location geoPointToLocation(GeoPoint geoPoint) {
 		Map<String, String> metadata = geoPoint.getMetadata();
 		metadata.putIfAbsent(LocationMetaData.REMOVAL_VOTES.toString(), "0");
-		metadata.putIfAbsent(LocationMetaData.TOTAL_REMOVAL_VOTES_TO_DELETE.toString(), "3");
+		metadata.putIfAbsent(LocationMetaData.TOTAL_REMOVAL_VOTES_TO_DELETE.toString(), totalRemovalVotesToDelete);
 		return new Location(geoPoint.getObjectId(), new Coordinates(geoPoint.getLongitude(), geoPoint.getLatitude()), metadata);
 	}
 
